@@ -1,0 +1,35 @@
+#
+#
+#
+#
+# # # # # # # # # # # # # #
+#         Secrets         #
+# # # # # # # # # # # # # #
+#
+#
+#
+#
+
+
+api.env
+mongo.env
+
+#
+#
+#
+#
+# # # # # # # # # # # # # #
+#     Generic Ignores     #
+# # # # # # # # # # # # # #
+#
+#
+#
+#
+
+# IDE Files
+.idea/
+.vsc/
+.vs/
+
+# Node dependencies
+node_modules/
