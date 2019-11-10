@@ -1,15 +1,7 @@
-# API
+## License
 
-Express → routing and middleware    
-Body-Parser → HTML payload parsing    
-Mongoose → MongoDB interface    
-Morgan → Logging
+This project is licensed under the [GNU GPLv3](https://www.gnu.org/licenses/gpl.html).    
+This license is copy-left and conducive to free, open-source software.
 
-# Notes
-
-`/bin/www` will register as a text file by default in JetBrains IDEs. 
-Though it does not have the .js extension, it should have JavaScript
-syntax highlighting.
-
-Go to Settings, Editor, File Types, JavaScript   
-then add `www` in the 'Registered Patterns' section.
+Project license: https://github.com/vardy/Examiner.ai/blob/master/LICENSE.md    
+License details: https://choosealicense.com/licenses/gpl-3.0/#

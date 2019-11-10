@@ -1,35 +1,18 @@
 #
-#
-#
-#
-# # # # # # # # # # # # # #
-#         Secrets         #
-# # # # # # # # # # # # # #
-#
-#
-#
+# Secrets
 #
 
-
-api.env
-mongo.env
+api/.env
+web/.env
 
 #
 #
-#
-#
-# # # # # # # # # # # # # #
-#     Generic Ignores     #
-# # # # # # # # # # # # # #
-#
-#
-#
-#
-
 # IDE Files
+
 .idea/
 .vsc/
 .vs/
 
-# Node dependencies
-node_modules/
+# Python files
+
+__pycache__/

@@ -1,27 +1,29 @@
-version: '3.4'
+version: '2.0'
 
 services:
 
-  # Mongo database
-  # Runs on port 27017
-  # Restart on failures
-  # Connect via URL 'mongo:27017'
-  mongo:
-    restart: on-failure
-    image: mongo
-    container_name: mongo
-    command: "--smallfiles --logpath=/dev/null"
-    env_file:
-      - mongo.env
-
+  # Accessible in IB.ai network on http://api:8080
   api:
-    restart: on-failure
-    build: .
-    volumes:
-      - .:/app
-    ports:
-      - 3000:3000
+    build:
+      context: ./api/
+      dockerfile: api/Dockerfile
     env_file:
-      - api.env
-    depends_on:
-      - mongo
+      - api/.env
+    networks:
+      - ibai_main
+
+  # Publicly accessible on http://<host>/
+  web:
+    build:
+      context: ./web/
+      dockerfile: web/Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - ibai_main
+
+# Connecting to bot's network.
+# The IB.ai docker-compose must be started first.
+networks:
+  ibai_main:
+    external: true
