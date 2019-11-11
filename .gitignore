@@ -12,7 +12,3 @@ web/.env
 .idea/
 .vsc/
 .vs/
-
-# Python files
-
-__pycache__/

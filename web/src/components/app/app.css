@@ -1,0 +1,51 @@
+@import "@jetbrains/ring-ui/components/global/variables.css";
+
+.wrapper-element {
+  height: 100vh;
+}
+
+.height-100 {
+  height: 100%;
+}
+
+html, .app-root {
+  height: 100%;
+}
+
+.app-root {
+  height: 100vh;
+
+  margin: 0;
+  padding: 0;
+
+  background: var(--ring-content-background-color);
+
+  font-family: var(--ring-font-family);
+  font-size: var(--ring-font-size);
+  line-height: var(--ring-line-height);
+}
+
+.app-content {
+  margin: calc(var(--ring-unit) * 4);
+  margin-bottom: 100px;
+}
+
+.col1, .col2, .col3 {
+  height: 2000px;
+}
+
+.ring-island {
+  height: 100%;
+}
+
+.sidebar {
+  padding-top: 20px;
+  margin-bottom: 50px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: calc(100vw - 64px);
+  background-color: white;
+}
