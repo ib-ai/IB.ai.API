@@ -8,9 +8,19 @@ import logo from '../../ib-logo.svg';
 import './app.css';
 import {ContentLayout, Sidebar} from "@jetbrains/ring-ui";
 
+
 export default class AppRoot extends Component {
   componentDidMount() {
-
+    /*axios.get("http://api:8080/")
+    .then(response => {
+      console.log(response.data.url);
+      console.log(response.data.explanation);
+      document.getElementById("data-location").data = response.data
+    })
+    .catch(error => {
+      console.log(error);
+      return "Error";
+    });*/
   }
 
   render() {
@@ -24,7 +34,7 @@ export default class AppRoot extends Component {
             />
           </a>
           <h1>
-            Testing 123
+            Testing 1234
           </h1>
         </Header>
         <ContentLayout>
@@ -41,6 +51,7 @@ export default class AppRoot extends Component {
           </Sidebar>
           <div className="app-content">
             <h1>A header</h1>
+            <div>{this.props.data}</div>
             <Grid>
               <Row start="xs">
                 <Col xs={12} sm={4} md={6} lg={3} className="col1">

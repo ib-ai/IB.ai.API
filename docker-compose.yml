@@ -6,24 +6,28 @@ services:
   api:
     build:
       context: ./api/
-      dockerfile: api/Dockerfile
+      dockerfile: Dockerfile
     env_file:
-      - api/.env
-    networks:
-      - ibai_main
+      - ./api/.env
+    depends_on:
+      - db
 
   # Publicly accessible on http://<host>/
   web:
     build:
       context: ./web/
-      dockerfile: web/Dockerfile
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
-    networks:
-      - ibai_main
+      - "9010:9010"
+    depends_on:
+      - api
+
+  # redis://db:6379
+  db:
+    image: redis
 
 # Connecting to bot's network.
 # The IB.ai docker-compose must be started first.
-networks:
-  ibai_main:
-    external: true
+#networks:
+#  ibai_main:
+#    external: true
