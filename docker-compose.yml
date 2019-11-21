@@ -1,29 +1,21 @@
-version: '2.0'
+version: '3.7'
 
 services:
 
-  # Accessible in IB.ai network on http://api:8080
-  api:
+  # Accessible in IB.ai network on http://ibai_api:8080
+  ibai_api:
     build:
-      context: ./api/
+      context: .
       dockerfile: Dockerfile
     env_file:
-      - ./api/.env
-    depends_on:
-      - db
-
-  # Publicly accessible on http://<host>/
-  web:
-    build:
-      context: ./web/
-      dockerfile: Dockerfile
+      - .env
     ports:
-      - "9010:9010"
+      - "6001:6001"
     depends_on:
-      - api
+      - ibai_redis
 
-  # redis://db:6379
-  db:
+  # redis://ibai_redis:6379
+  ibai_redis:
     image: redis
 
 # Connecting to bot's network.

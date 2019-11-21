@@ -1,9 +1,8 @@
 #
-# Secrets
 #
+# Secrets
 
-api/.env
-web/.env
+.env
 
 #
 #
@@ -12,3 +11,12 @@ web/.env
 .idea/
 .vsc/
 .vs/
+
+
+#
+#
+# Generated files
+
+__pycache__/
+node_modules/
+dist/

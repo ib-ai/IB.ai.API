@@ -1,0 +1,31 @@
+# Base image to build React backend
+FROM node:11 AS node_build_step
+
+LABEL "repository"="https://github.com/ib-ai/web"
+LABEL "homepage"="https://github.com/ib-ai/web"
+LABEL "maintainer"="Jarred Vardy <jarred.vardy@gmail.com>"
+
+WORKDIR /node_build/front
+COPY front/package*.json ./
+
+# Building react app
+RUN npm install
+
+COPY front/. .
+RUN npm run build
+
+WORKDIR /node_build
+COPY . .
+
+# Base image for running python backend
+FROM python:3.8
+
+WORKDIR /web
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY --from=node_build_step /node_build .
+
+# Application entrypoint
+CMD [ "python3", "app.py" ]
