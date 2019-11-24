@@ -10,17 +10,15 @@ import {ContentLayout, Sidebar} from "@jetbrains/ring-ui";
 
 
 export default class AppRoot extends Component {
+  state = {display_message: ""};
+
   componentDidMount() {
-    /*axios.get("http://api:8080/")
-    .then(response => {
-      console.log(response.data.url);
-      console.log(response.data.explanation);
-      document.getElementById("data-location").data = response.data
-    })
-    .catch(error => {
-      console.log(error);
-      return "Error";
-    });*/
+    fetch('/api/test')
+        .then(res => res.json())
+        .then(body => {
+          let text = body["Test response"];
+          this.setState({ display_message: text })
+        });
   }
 
   render() {
@@ -51,7 +49,9 @@ export default class AppRoot extends Component {
           </Sidebar>
           <div className="app-content">
             <h1>A header</h1>
-            <div>{this.props.data}</div>
+            <div>
+                {this.state.display_message}
+            </div>
             <Grid>
               <Row start="xs">
                 <Col xs={12} sm={4} md={6} lg={3} className="col1">
