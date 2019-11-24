@@ -1,3 +1,5 @@
+import os
+
 import redis
 
 host = os.environ['REDIS_HOST']
