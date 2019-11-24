@@ -4,11 +4,14 @@ from flask import Flask, send_from_directory
 from flask_restful import Api
 
 from db import redis_client
-from api_resources.test_resource import TestResource
+from utils import string_to_boolean
+from resources.test_resource import TestResource
 
 app = Flask(__name__, static_folder="front/dist/")
 api = Api(app)
 
+# Environment variables
+debug_mode = string_to_boolean(os.environ['DEBUG'])
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -25,6 +28,6 @@ if __name__ == "__main__":
     redis_client.set("Test", "A value")
     app.run(
         host="0.0.0.0",
-        port=6001,
-        debug=True
+        port=3000,
+        debug=debug_mode
     )
