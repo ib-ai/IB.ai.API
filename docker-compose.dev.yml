@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  # Accessible in IB.ai network on http://ibai_api:8080
+  # Accessible in IB.ai network on http://ibai_api:3000
   ibai_api:
     build:
       context: .
@@ -10,16 +10,10 @@ services:
     env_file:
       - .env
     ports:
-      - "6001:6001"
+      - "3000:3000"
     depends_on:
       - ibai_redis
 
   # redis://ibai_redis:6379
   ibai_redis:
     image: redis
-
-# Connecting to bot's network.
-# The IB.ai docker-compose must be started first.
-#networks:
-#  ibai_main:
-#    external: true

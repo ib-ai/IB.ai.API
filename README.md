@@ -1,3 +1,10 @@
+# IB.ai API and Web Interface
+
+The Docker container should be networked into the IB.ai compose 
+network in order to access the Redis database. The name of the Redis 
+service should then be supplied as the REDIS_HOST in the environment 
+variables.
+
 ## License
 
 This project is licensed under the [GNU GPLv3](https://www.gnu.org/licenses/gpl.html).    

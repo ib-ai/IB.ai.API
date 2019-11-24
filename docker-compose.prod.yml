@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+
+  # Accessible in IB.ai network on http://ibai_api:3000
+  ibai_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
