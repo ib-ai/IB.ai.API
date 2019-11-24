@@ -5,6 +5,9 @@ network in order to access the Redis database. The name of the Redis
 service should then be supplied as the REDIS_HOST in the environment 
 variables.
 
+To supply a specific docker-compose file to `up --build`, provide the 
+`-f <compose_name>` flag.
+
 ## License
 
 This project is licensed under the [GNU GPLv3](https://www.gnu.org/licenses/gpl.html).    
