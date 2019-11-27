@@ -6,6 +6,7 @@ from flask_restful import Api
 from db import redis_client
 from utils import string_to_boolean
 from resources.test_resource import TestResource
+from resources.tags_resource import TagsResource
 
 app = Flask(__name__, static_folder="front/dist/")
 api = Api(app)
@@ -23,6 +24,7 @@ def serve_react(path):
 
 
 api.add_resource(TestResource, "/api/test")
+api.add_resource(TagsResource, "/api/tags/<server_id>")
 
 if __name__ == "__main__":
     redis_client.set("Test", "A value")

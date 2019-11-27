@@ -1,12 +1,23 @@
 import React, {Component} from 'react';
-import Header, {Logo} from '@jetbrains/ring-ui/components/header/header';
-import Footer from '@jetbrains/ring-ui/components/footer/footer';
-import {ContentLayout, Sidebar} from "@jetbrains/ring-ui";
 import '@jetbrains/ring-ui/components/island-legacy/island-legacy.scss'
 
-import logo from '../../ib-logo.svg';
+import logo from '../../bot-icon.svg';
 import './app.css';
+
+import Header, {Logo} from '@jetbrains/ring-ui/components/header/header';
+import Footer from '@jetbrains/ring-ui/components/footer/footer';
 import TestData from "../data_display/test";
+import ContentLayout from "@jetbrains/ring-ui/components/content-layout/content-layout";
+import Sidebar from "@jetbrains/ring-ui/components/content-layout/sidebar";
+import Link from "@jetbrains/ring-ui/components/link/link";
+import Button from "@jetbrains/ring-ui/components/button/button";
+import {BrowserRouter, Route} from "react-router-dom";
+
+/*
+<!--<BrowserRouter>
+  <Route path="/tags" component={TestData} />
+</BrowserRouter>-->
+*/
 
 export default class AppRoot extends Component {
 
@@ -17,20 +28,20 @@ export default class AppRoot extends Component {
           <a href="/">
             <Logo
               glyph={logo}
-              size={Logo.Size.Size48}
             />
           </a>
-          <h1>IB.ai Dashboard</h1>
+          <div id="header-title">IB.ai Dashboard</div>
+          <Link href="#">Commands</Link>
+          <Link href="#">Database</Link>
+          <Link href="#">Configuration</Link>
         </Header>
-        <ContentLayout>
+        <ContentLayout className="body-content">
           <Sidebar className="sidebar">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur porttitor sodales tellus ac rutrum. Duis interdum tellus lorem, ac pulvinar lorem tempus et. Fusce nulla lacus, lobortis sed erat eu, blandit tincidunt turpis. Phasellus ut sollicitudin ligula, nec tempor justo. Nullam at dolor sagittis, volutpat erat id, interdum purus. In volutpat felis vel ex placerat, sed eleifend lectus egestas. Phasellus scelerisque magna eu odio porttitor, ac laoreet mauris tristique. Curabitur placerat turpis vel turpis posuere, a malesuada turpis feugiat. Vestibulum ac elit pulvinar, interdum odio a, pulvinar massa. Curabitur lacus ligula, mollis a lorem sed, ultricies bibendum lacus. Fusce enim est, gravida eget felis nec, placerat vestibulum nunc. Donec gravida augue vitae urna eleifend varius. Mauris porttitor dolor a diam elementum, et vulputate mi viverra. Vivamus commodo orci in consequat sagittis. Proin tempus lectus ut vestibulum sollicitudin.
-            Cras dictum tortor non tempus laoreet. Suspendisse potenti. In erat nulla, sollicitudin sed metus in, placerat consectetur lorem. Aenean viverra convallis justo et volutpat. Mauris eget nulla fermentum, consequat leo sit amet, tempus dui. Duis tincidunt sapien id odio finibus malesuada. Proin elementum cursus magna at pulvinar. Etiam ornare erat ac congue accumsan
-            Aenean lacinia risus purus, non finibus augue suscipit non. Sed rutrum orci non nisi ultricies, eget dictum tellus consectetur. In pretium, quam vel laoreet elementum, lorem lorem vehicula nisl, sit amet consequat lacus sapien in quam. Maecenas nec malesuada massa, vel interdum augue. Sed hendrerit dictum vehicula. Donec sodales arcu non rhoncus pharetra. Sed posuere euismod auctor. Integer viverra ligula ac pellentesque mollis. Sed ultrices dui at venenatis blandit.
-            Integer consectetur at quam sed vestibulum. Aenean molestie odio a bibendum ornare. Nullam venenatis, lacus eget volutpat viverra, dolor quam mattis sem, ut congue mauris felis in augue. Suspendisse sed quam lorem. Donec eget nisi non leo pretium hendrerit ac in odio. Pellentesque dignissim, massa at ullamcorper dapibus, odio metus tempus lacus, nec tincidunt sapien sapien sed ligula. Suspendisse cursus mauris libero, ut iaculis est lacinia in. Nunc rutrum, massa ut venenatis ultrices, dui ante sagittis urna, quis varius erat ante a libero. Proin accumsan nisi lacus, non efficitur sem consequat at. Mauris a bibendum dui. Curabitur sed porttitor mauris. Vestibulum semper arcu id quam euismod, at finibus sapien blandit. Fusce convallis dolor ac dui condimentum, vulputate lobortis dolor dignissim. Ut scelerisque libero ut scelerisque cursus.
-            Suspendisse bibendum sagittis commodo. Curabitur commodo risus nec erat malesuada porta. Phasellus elementum est tortor, a eleifend nisl maximus sed. Donec maximus accumsan metus at pulvinar. Praesent imperdiet, libero sit amet scelerisque interdum, mi mi lacinia dui, et mattis ipsum augue vitae augue. Aenean imperdiet euismod justo, nec finibus orci molestie nec. Maecenas quis congue odio, et mollis nibh. Etiam eu lectus commodo, dignissim magna ut, facilisis erat. Phasellus molestie, tellus et condimentum porta, nulla metus sagittis arcu, sed bibendum quam justo eget libero. Vivamus lobortis dictum dui, sit amet sagittis sem auctor at. Aliquam porta interdum orci, quis maximus lectus interdum sed. Sed consectetur mattis lectus, vel semper mi placerat non.
+            <ul className="sidebar-list">
+              <li className="sidebar-item"><Button href="/tags" className="sidebar-button">Tags</Button></li>
+            </ul>
           </Sidebar>
-          <div className="app-content">
+          <div className="presentation-area">
             <TestData />
           </div>
         </ContentLayout>
