@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import {Col, Grid, Row} from "@jetbrains/ring-ui";
-import '@jetbrains/ring-ui/components/island-legacy/island-legacy.scss'
 
 export default class TestData extends Component {
   state = {display_message: ""};
