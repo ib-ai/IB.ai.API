@@ -10,11 +10,12 @@ from resources.test_resource import TestResource
 from resources.tags_resource import TagsResource
 
 app = Flask(__name__, static_folder="front/build/")
-CORS(app)
+if string_to_boolean(os.environ['DEV']):
+    CORS(app)
 api = Api(app)
 
 # Environment variables
-debug_mode = string_to_boolean(os.environ['DEBUG'])
+debug_mode = string_to_boolean(os.environ['DEV'])
 
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
