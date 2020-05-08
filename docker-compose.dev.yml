@@ -2,27 +2,51 @@ version: '3.7'
 
 services:
 
-  # Accessible in IB.ai network on http://ibai_web:3000
-  ibai_web:
+  # Accessible at http://localhost:3001
+  front:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev.front
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+      - backend
+    env_file:
+      - .env
+    volumes:
+      - ./front:/front
+
+  # Accessible at http://localhost:3000
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev.back
     env_file:
       - .env
     ports:
       - "3000:3000"
     depends_on:
-      - ibai_redis
+      - db
+    volumes:
+      - .:/web
 
+  # Accessible at http://localhost:8081
   redis-commander:
       image: rediscommander/redis-commander:latest
       environment:
-       - REDIS_HOSTS=local:ibai_redis:6379
+       - REDIS_HOSTS=local:db:6379
       ports:
        - "8081:8081"
       depends_on:
-       - ibai_redis
+       - db
 
-  # redis://ibai_redis:6379
-  ibai_redis:
+  # redis://db:6379
+  db:
     image: redis
+    volumes:
+      - db-data:/data
+
+volumes:
+  db-data:

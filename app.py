@@ -2,13 +2,15 @@ import os
 
 from flask import Flask, send_from_directory
 from flask_restful import Api
+from flask_cors import CORS
 
 from db import redis_client
 from utils import string_to_boolean
 from resources.test_resource import TestResource
 from resources.tags_resource import TagsResource
 
-app = Flask(__name__, static_folder="front/dist/")
+app = Flask(__name__, static_folder="front/build/")
+CORS(app)
 api = Api(app)
 
 # Environment variables

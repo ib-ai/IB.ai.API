@@ -1,6 +1,6 @@
 # Generated files
 ./front/node_modules/
-./front/dist/
+./front/build/
 
 # IDE files
 .idea/
