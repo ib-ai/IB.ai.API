@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   # Accessible at http://localhost:3001
-  front:
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile.dev.front
