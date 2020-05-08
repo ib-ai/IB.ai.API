@@ -9,3 +9,5 @@ services:
       dockerfile: Dockerfile.prod
     env_file:
       - .env
+    environment:
+      - REACT_APP_API_URL=
