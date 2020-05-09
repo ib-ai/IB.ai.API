@@ -5,6 +5,7 @@ LABEL "homepage"="https://github.com/ib-ai/web"
 LABEL "maintainer"="Jarred Vardy <jarred.vardy@gmail.com>"
 
 WORKDIR /front
+RUN rm -rf ./node_modules/
 COPY front/package*.json ./
 
 # Building react app
