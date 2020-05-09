@@ -8,7 +8,7 @@ WORKDIR /front
 COPY front/package*.json ./
 
 # Building react app
-RUN npm ci -qy
+RUN npm install
 
 COPY front/. .
 

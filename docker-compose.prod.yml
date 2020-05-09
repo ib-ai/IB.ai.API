@@ -2,12 +2,21 @@ version: '3.7'
 
 services:
 
-  # Accessible in IB.ai network on http://ibai_web:3000
-  ibai_web:
+  # Accessible in network on http://web:3000
+  # Public at http://<PUBLIC_HOST>:3000 or http://localhost:3000
+  web:
     build:
       context: .
       dockerfile: Dockerfile.prod
     env_file:
       - .env
-    environment:
-      - REACT_APP_API_URL=
+    ports:
+      - "3000:3000"
+
+  db:
+    image: redis
+    volumes:
+      - db-data:/data
+
+volumes:
+  db-data:

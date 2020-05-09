@@ -19,8 +19,7 @@ export default class Body extends Component {
           </Col>
           <Col className="rightColour">
             <p>Right column</p>
-            <h1>API URL Here:</h1>
-            <p>{process.env.REACT_APP_API_URL}</p>
+            <h1>Some content</h1>
           </Col>
         </Row>
       </Container>

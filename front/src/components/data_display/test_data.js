@@ -4,7 +4,7 @@ export default class TestData extends Component {
   state = {display_message: ""};
 
   componentDidMount() {
-    fetch(process.env.REACT_APP_API_URL + '/api/test')
+    fetch((process.env.REACT_APP_API_URL || "") + '/api/test')
         .then(res => res.json())
         .then(body => {
           let text = body["Test response"];
@@ -18,6 +18,9 @@ export default class TestData extends Component {
         <h1>API Data Here:</h1>
         <div>
             {this.state.display_message}
+        </div>
+        <div>
+          {(process.env.REACT_APP_API_URL || "") + '/api/test'}
         </div>
       </div>
     );
