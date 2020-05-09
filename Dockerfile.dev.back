@@ -2,7 +2,6 @@ FROM python:3.8
 
 LABEL "repository"="https://github.com/ib-ai/web"
 LABEL "homepage"="https://github.com/ib-ai/web"
-LABEL "maintainer"="Jarred Vardy <jarred.vardy@gmail.com>"
 
 WORKDIR /web
 COPY requirements.txt .

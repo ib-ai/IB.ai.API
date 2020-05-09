@@ -3,7 +3,6 @@ FROM node:11 AS node_build_step
 
 LABEL "repository"="https://github.com/ib-ai/web"
 LABEL "homepage"="https://github.com/ib-ai/web"
-LABEL "maintainer"="Jarred Vardy <jarred.vardy@gmail.com>"
 
 WORKDIR /node_build/front
 COPY front/package*.json ./
