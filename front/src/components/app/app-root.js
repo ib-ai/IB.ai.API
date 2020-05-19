@@ -1,14 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 
-import Header from "../structural/header";
-import Body from "../structural/body";
+import Sidebar from "../structural/sidebar";
 
 export default class AppRoot extends Component {
   render() {
     return (
       <div>
-        <Header />
-        <Body />
+        <Sidebar />
       </div>
     );
   }
