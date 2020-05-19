@@ -1,9 +1,12 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
+
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import MaterialTable from "material-table";
+import TextField from "@material-ui/core/TextField";
 
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
@@ -20,6 +23,7 @@ import Edit from "@material-ui/icons/Edit";
 import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -42,6 +46,15 @@ const useStyles = makeStyles({
     marginLeft: "20px",
     width: "100%",
   },
+  resize: {
+    fontSize: 13,
+  },
+});
+
+const theme = createMuiTheme({
+  typography: {
+    fontSize: 13,
+  },
 });
 
 function Tags() {
@@ -50,7 +63,31 @@ function Tags() {
   const [tags, setTags] = React.useState({
     columns: [
       { title: "Tag Trigger", field: "trigger" },
-      { title: "Tag Result", field: "result" },
+      {
+        title: "Tag Result",
+        field: "result",
+        render: (rowData) => {
+          console.log(rowData);
+          return (
+            <ThemeProvider theme={theme}>
+              <Typography>{rowData.result}</Typography>
+            </ThemeProvider>
+          );
+        },
+        editComponent: (props) => (
+          <TextField
+            value={props.value}
+            fullWidth={true}
+            multiline={true}
+            InputProps={{
+              classes: {
+                input: classes.resize,
+              },
+            }}
+            onChange={(e) => props.onChange(e.target.value)}
+          />
+        ),
+      },
     ],
     data: [
       { trigger: "Mehmet", result: "Baran" },
