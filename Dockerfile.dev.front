@@ -7,9 +7,6 @@ WORKDIR /front
 RUN rm -rf ./node_modules/
 COPY front/package*.json ./
 
-# Building react app
-RUN npm install
-
 COPY front/. .
 
 EXPOSE 3001
