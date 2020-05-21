@@ -14,10 +14,17 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import { Typography, Divider, Grid } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Tags from "../sideBarSections/Tags";
-import Reactions from "../sideBarSections/Reactions";
+import Cassowaries from "../sideBarSections/Cassowaries";
 import EmojiStats from "../sideBarSections/EmojiStats";
 import Filter from "../sideBarSections/Filter";
+import HelperModerator from "../sideBarSections/HelperModerator";
+import Monitor from "../sideBarSections/Monitor";
+import Notes from "../sideBarSections/Notes";
+import Reactions from "../sideBarSections/Reactions";
+import Reminders from "../sideBarSections/Reminders";
+import Tags from "../sideBarSections/Tags";
+import UserSearch from "../sideBarSections/UserSearch";
+import Votes from "../sideBarSections/Votes";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -69,32 +76,48 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Sidebar() {
-  const sideBarCategories = ["Tags", "Reactions", "Emoji Stats", "Filter"];
+  const sideBarCategories = [
+    { id: "Tags", comp: Tags },
+    { id: "Emoji Stats", comp: EmojiStats },
+    { id: "Reactions", comp: Reactions },
+    { id: "Filter", comp: Filter },
+    { id: "Votes", comp: Votes },
+    { id: "User Search", comp: UserSearch },
+    { id: "Notes", comp: Notes },
+    { id: "Reminders", comp: Reminders },
+    { id: "Monitor", comp: Monitor },
+    { id: "Helper/Moderator", comp: HelperModerator },
+    { id: "Cassowaries", comp: Cassowaries },
+  ];
+
+  const sideBarHiddenState = {};
+
+  sideBarCategories.map((cat) => {
+    sideBarHiddenState[cat.id] = false;
+  });
+
+  const previousValues = React.useRef(sideBarHiddenState);
+
+  const [sideBarShown, setSideBar] = React.useState(sideBarHiddenState);
+  const [firstRun, setFirstRun] = React.useState(true);
+
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [cardsInGrid, setCards] = React.useState([]);
 
-  const [showTags, setShowTags] = React.useState(false);
-  const [showReactions, setShowReactions] = React.useState(false);
-  const [showEmojiStats, setShowEmojiStats] = React.useState(false);
-  const [showFilter, setShowFilter] = React.useState(false);
+  const onSideBarClick = (sideBarKey) => {
+    let newArray = { ...sideBarShown };
 
-  const onTagsClick = () => {
-    setShowTags(!showTags);
-  };
-  const onReactionsClick = () => {
-    setShowReactions(!showReactions);
-  };
-  const onEmojiStatsClick = () => {
-    setShowEmojiStats(!showEmojiStats);
-  };
-  const onFilterClick = () => {
-    setShowFilter(!showFilter);
+    const key = sideBarKey;
+    const bool = newArray[key];
+
+    newArray = { ...newArray, [key]: !bool };
+    setSideBar(newArray);
   };
 
-  function addToGrid(id, component) {
-    setCards((c) => c.concat({ id: id, component: component }));
+  function addToGrid(id) {
+    setCards((c) => c.concat({ id: id }));
   }
 
   function removeFromGrid(componentId) {
@@ -102,36 +125,26 @@ function Sidebar() {
   }
 
   useEffect(() => {
-    if (showTags) {
-      addToGrid("tags", Tags);
-    } else {
-      removeFromGrid("tags");
+    if (firstRun === true) {
+      setFirstRun(false);
     }
-  }, [showTags]);
+    Object.keys(sideBarShown).map((key) => {
+      if (sideBarShown[key] !== previousValues.current[key]) {
+        if (sideBarShown[key] === true) {
+          addToGrid(key);
+        } else {
+          removeFromGrid(key);
+        }
 
-  useEffect(() => {
-    if (showReactions) {
-      addToGrid("reactions", Reactions);
-    } else {
-      removeFromGrid("reactions");
-    }
-  }, [showReactions]);
-
-  useEffect(() => {
-    if (showEmojiStats) {
-      addToGrid("emojistats", EmojiStats);
-    } else {
-      removeFromGrid("emojistats");
-    }
-  }, [showEmojiStats]);
-
-  useEffect(() => {
-    if (showFilter) {
-      addToGrid("filter", Filter);
-    } else {
-      removeFromGrid("filter");
-    }
-  }, [showFilter]);
+        previousValues.current = sideBarShown;
+      }
+    });
+  }, [
+    addToGrid,
+    removeFromGrid,
+    firstRun,
+    ...Object.keys(sideBarShown).map((key) => sideBarShown[key]),
+  ]);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
@@ -140,38 +153,12 @@ function Sidebar() {
   const drawer = (
     <div>
       <List>
-        <ListItem
-          button
-          key={sideBarCategories[0]}
-          onClick={() => onTagsClick()}
-        >
-          <ListItemText primary={sideBarCategories[0]} />
-          {showTags ? <Typography>•</Typography> : null}
-        </ListItem>
-        <ListItem
-          button
-          key={sideBarCategories[1]}
-          onClick={() => onReactionsClick()}
-        >
-          <ListItemText primary={sideBarCategories[1]} />
-          {showReactions ? <Typography>•</Typography> : null}
-        </ListItem>
-        <ListItem
-          button
-          key={sideBarCategories[2]}
-          onClick={() => onEmojiStatsClick()}
-        >
-          <ListItemText primary={sideBarCategories[2]} />
-          {showEmojiStats ? <Typography>•</Typography> : null}
-        </ListItem>
-        <ListItem
-          button
-          key={sideBarCategories[3]}
-          onClick={() => onFilterClick()}
-        >
-          <ListItemText primary={sideBarCategories[3]} />
-          {showFilter ? <Typography>•</Typography> : null}
-        </ListItem>
+        {Object.keys(sideBarShown).map((key, index) => (
+          <ListItem button key={key} onClick={() => onSideBarClick(key)}>
+            <ListItemText primary={key} />
+            {sideBarShown[key] ? <Typography>•</Typography> : null}
+          </ListItem>
+        ))}
       </List>
       <Divider />
       <Typography align="center">Signed in as:</Typography>
@@ -258,13 +245,12 @@ function Sidebar() {
           wrap="wrap"
           spacing={4}
         >
-          {/* {showTags ? <Tags /> : null}
-          {showReactions ? <Reactions /> : null}
-          {showEmojiStats ? <EmojiStats /> : null}
-          {showFilter ? <Filter /> : null} */}
-          {cardsInGrid.map(({ id, component: Component }) => (
-            <Component key={id} />
-          ))}
+          {cardsInGrid.map((card) => {
+            const Component = sideBarCategories.find(
+              (cat) => cat.id === card.id
+            ).comp;
+            return <Component key={card.id} />;
+          })}
         </Grid>
       </div>
     </div>

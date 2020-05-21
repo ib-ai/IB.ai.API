@@ -52,7 +52,7 @@ const useStyles = makeStyles({
 });
 
 const theme = createMuiTheme({
-  typography: {
+  cardTypography: {
     fontSize: 13,
   },
 });
@@ -67,10 +67,11 @@ function Tags() {
         title: "Tag Result",
         field: "result",
         render: (rowData) => {
-          console.log(rowData);
           return (
             <ThemeProvider theme={theme}>
-              <Typography>{rowData.result}</Typography>
+              <Typography theme={theme.cardTypography}>
+                {rowData.result}
+              </Typography>
             </ThemeProvider>
           );
         },
