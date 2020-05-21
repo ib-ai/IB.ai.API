@@ -14,17 +14,20 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import { Typography, Divider, Grid } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Cassowaries from "../sideBarSections/Cassowaries";
-import EmojiStats from "../sideBarSections/EmojiStats";
-import Filter from "../sideBarSections/Filter";
-import HelperModerator from "../sideBarSections/HelperModerator";
-import Monitor from "../sideBarSections/Monitor";
-import Notes from "../sideBarSections/Notes";
-import Reactions from "../sideBarSections/Reactions";
-import Reminders from "../sideBarSections/Reminders";
-import Tags from "../sideBarSections/Tags";
-import UserSearch from "../sideBarSections/UserSearch";
-import Votes from "../sideBarSections/Votes";
+
+import {
+  Cassowaries,
+  EmojiStats,
+  Filter,
+  HelperModerator,
+  Monitor,
+  Notes,
+  Reactions,
+  Reminders,
+  Tags,
+  UserSearch,
+  Votes,
+} from "../sideBarSections/index.js";
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
