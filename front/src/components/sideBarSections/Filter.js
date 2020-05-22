@@ -1,20 +1,33 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
+
 import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import MaterialTable from "material-table";
+import TextField from "@material-ui/core/TextField";
+
+import Search from "@material-ui/icons/Search";
+import ViewColumn from "@material-ui/icons/ViewColumn";
+import SaveAlt from "@material-ui/icons/SaveAlt";
+import ChevronLeft from "@material-ui/icons/ChevronLeft";
+import ChevronRight from "@material-ui/icons/ChevronRight";
+import FirstPage from "@material-ui/icons/FirstPage";
+import LastPage from "@material-ui/icons/LastPage";
+import Add from "@material-ui/icons/Add";
+import Check from "@material-ui/icons/Check";
+import FilterList from "@material-ui/icons/FilterList";
+import Remove from "@material-ui/icons/Remove";
+import Edit from "@material-ui/icons/Edit";
+import Delete from "@material-ui/icons/Delete";
+import Clear from "@material-ui/icons/Clear";
+import Cancel from "@material-ui/icons/Cancel";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
   },
   title: {
     fontSize: 14,
@@ -28,39 +41,125 @@ const useStyles = makeStyles({
     marginLeft: "20px",
     width: "100%",
   },
+  resize: {
+    fontSize: 13,
+  },
+});
+
+const theme = createMuiTheme({
+  cardTypography: {
+    fontSize: 13,
+  },
 });
 
 function Filter() {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+
+  const [filters, setFilters] = React.useState({
+    columns: [
+      { title: "Filter Name", field: "name" },
+      {
+        title: "Filter Trigger",
+        field: "trigger",
+        render: (rowData) => {
+          return (
+            <ThemeProvider theme={theme}>
+              <Typography theme={theme.cardTypography}>
+                {rowData.trigger}
+              </Typography>
+            </ThemeProvider>
+          );
+        },
+        editComponent: (props) => (
+          <TextField
+            value={props.value}
+            fullWidth={true}
+            multiline={true}
+            InputProps={{
+              classes: {
+                input: classes.resize,
+              },
+            }}
+            onChange={(e) => props.onChange(e.target.value)}
+          />
+        ),
+      },
+    ],
+    data: [
+      { name: "N-word", trigger: "(*)" },
+      {
+        name: "R-word",
+        trigger: "(((",
+      },
+    ],
+  });
 
   return (
     <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
       <div className={classes.root}>
         <Card className={classes.cardDesign}>
           <CardContent>
-            <Typography
-              className={classes.title}
-              color="textSecondary"
-              gutterBottom
-            >
-              Filters
-            </Typography>
-            <Typography variant="h5" component="h2">
-              be{bull}nev{bull}o{bull}lent
-            </Typography>
-            <Typography className={classes.pos} color="textSecondary">
-              adjective
-            </Typography>
-            <Typography variant="body2" component="p">
-              well meaning and kindly.
-              <br />
-              {'"a benevolent smile"'}
-            </Typography>
+            <MaterialTable
+              icons={{
+                Check: Check,
+                DetailPanel: ChevronRight,
+                Export: SaveAlt,
+                Filter: FilterList,
+                FirstPage: FirstPage,
+                LastPage: LastPage,
+                NextPage: ChevronRight,
+                PreviousPage: ChevronLeft,
+                Search: Search,
+                ThirdStateCheck: Remove,
+                Add: Add,
+                ViewColumn: ViewColumn,
+                Edit: Edit,
+                Delete: Delete,
+                Clear: Clear,
+                ResetSearch: Cancel,
+              }}
+              title="Filter List"
+              columns={filters.columns}
+              data={filters.data}
+              editable={{
+                onRowAdd: (newData) =>
+                  new Promise((resolve) => {
+                    setTimeout(() => {
+                      resolve();
+                      setFilters((prevState) => {
+                        const data = [...prevState.data];
+                        data.push(newData);
+                        return { ...prevState, data };
+                      });
+                    }, 600);
+                  }),
+                onRowUpdate: (newData, oldData) =>
+                  new Promise((resolve) => {
+                    setTimeout(() => {
+                      resolve();
+                      if (oldData) {
+                        setFilters((prevState) => {
+                          const data = [...prevState.data];
+                          data[data.indexOf(oldData)] = newData;
+                          return { ...prevState, data };
+                        });
+                      }
+                    }, 600);
+                  }),
+                onRowDelete: (oldData) =>
+                  new Promise((resolve) => {
+                    setTimeout(() => {
+                      resolve();
+                      setFilters((prevState) => {
+                        const data = [...prevState.data];
+                        data.splice(data.indexOf(oldData), 1);
+                        return { ...prevState, data };
+                      });
+                    }, 600);
+                  }),
+              }}
+            />
           </CardContent>
-          <CardActions>
-            <Button size="small">Learn More</Button>
-          </CardActions>
         </Card>
       </div>
     </Grid>
