@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 
 import Card from "@material-ui/core/Card";
@@ -28,7 +28,8 @@ import Edit from "@material-ui/icons/Edit";
 import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
-import { Typography } from "@material-ui/core";
+import { Checkbox } from "@material-ui/core";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -103,11 +104,8 @@ function Cassowaries() {
     };
   }
 
+  // eslint-disable-next-line
   const [roleIds, setRoleIds] = React.useState([]);
-
-  function handleChange(event) {
-    setRoleIds(event.target.value);
-  }
 
   const [cassowaries, setCassowaries] = React.useState({
     columns: [
@@ -117,11 +115,11 @@ function Cassowaries() {
         field: "roles",
         render: (rowData) => {
           return (
-            <li>
+            <div>
               {rowData.roles.map((role) => (
                 <Chip label={role} className={classes.chip} />
               ))}
-            </li>
+            </div>
           );
         },
         editComponent: (props) => (
@@ -129,28 +127,20 @@ function Cassowaries() {
             <InputLabel>Roles</InputLabel>
             <Select
               multiple
-              value={roleIds}
-              onChange={handleChange}
+              value={!props.value ? [] : props.value}
+              onChange={(e) => props.onChange(e.target.value)}
               input={<Input id="select-multiple-chip" />}
-              renderValue={(selected) => {
-                console.log(selected);
-
-                return (
-                  <div className={classes.chips}>
-                    {selected.map((value) => (
-                      <Chip
-                        key={value}
-                        label={value}
-                        className={classes.chip}
-                      />
-                    ))}
-                  </div>
-                );
-              }}
-              // MenuProps={MenuProps}
+              renderValue={(selected) => (
+                <div className={classes.chips}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} className={classes.chip} />
+                  ))}
+                </div>
+              )}
+              MenuProps={MenuProps}
             >
               {allRoleIds.map((id) => (
-                <MenuItem key={id} value={id}>
+                <MenuItem value={id} style={getStyles(id, roleIds, theme)}>
                   {id}
                 </MenuItem>
               ))}
@@ -158,9 +148,22 @@ function Cassowaries() {
           </FormControl>
         ),
       },
-      { title: "Penguin", field: "penguin" },
+      {
+        title: "Penguin",
+        field: "penguin",
+        type: "boolean",
+        render: (rowData) => {
+          return <Checkbox disabled checked={rowData.penguin} />;
+        },
+        editComponent: (props) => (
+          <Checkbox
+            checked={props.value || false}
+            onChange={(e) => props.onChange(e.target.checked)}
+          />
+        ),
+      },
     ],
-    data: [{ name: "Mehmet", roles: roleIds, penguin: true }],
+    data: [{ id: 1, name: "Mehmet", roles: [allRoleIds[1]], penguin: true }],
   });
 
   return (
@@ -186,6 +189,7 @@ function Cassowaries() {
                 Delete: Delete,
                 Clear: Clear,
                 ResetSearch: Cancel,
+                SortArrow: KeyboardArrowUpIcon,
               }}
               title="Cassowary List"
               columns={cassowaries.columns}
