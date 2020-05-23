@@ -24,6 +24,7 @@ import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
 import { Typography } from "@material-ui/core";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const useStyles = makeStyles({
   root: {
@@ -117,6 +118,7 @@ function Filter() {
                 Delete: Delete,
                 Clear: Clear,
                 ResetSearch: Cancel,
+                SortArrow: KeyboardArrowUpIcon,
               }}
               title="Filter List"
               columns={filters.columns}

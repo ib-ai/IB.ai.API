@@ -24,6 +24,7 @@ import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
 import { Typography } from "@material-ui/core";
+import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const useStyles = makeStyles({
   root: {
@@ -48,7 +49,7 @@ const useStyles = makeStyles({
 
 const theme = createMuiTheme({
   cardTypography: {
-    fontSize: 13,
+    fontSize: 12,
   },
 });
 
@@ -117,6 +118,7 @@ function Tags() {
                 Delete: Delete,
                 Clear: Clear,
                 ResetSearch: Cancel,
+                SortArrow: KeyboardArrowUpIcon,
               }}
               title="Tag List"
               columns={tags.columns}

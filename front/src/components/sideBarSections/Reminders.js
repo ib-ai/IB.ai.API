@@ -1,12 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Collapse from "@material-ui/core/Collapse";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -86,7 +84,7 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {reminder.reminders.map((reminderRow) => (
-                    <TableRow key={reminderRow.name}>
+                    <TableRow>
                       <TableCell component="th" scope="row">
                         {reminderRow.name}
                       </TableCell>
