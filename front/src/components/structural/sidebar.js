@@ -19,7 +19,7 @@ import {
   Cassowaries,
   EmojiStats,
   Filter,
-  HelperModerator,
+  RoleIDs,
   Monitor,
   Notes,
   Reactions,
@@ -89,7 +89,7 @@ function Sidebar() {
     { id: "Notes", comp: Notes },
     { id: "Reminders", comp: Reminders },
     { id: "Monitor", comp: Monitor },
-    { id: "Helper/Moderator", comp: HelperModerator },
+    { id: "Role IDs", comp: RoleIDs },
     { id: "Cassowaries", comp: Cassowaries },
   ];
 

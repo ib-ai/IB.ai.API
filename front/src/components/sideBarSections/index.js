@@ -1,7 +1,7 @@
 export { default as Cassowaries } from "./Cassowaries.js";
 export { default as EmojiStats } from "./EmojiStats.js";
 export { default as Filter } from "./Filter.js";
-export { default as HelperModerator } from "./HelperModerator.js";
+export { default as RoleIDs } from "./RoleIDs.js";
 export { default as Monitor } from "./Monitor.js";
 export { default as Notes } from "./Notes.js";
 export { default as Reactions } from "./Reactions.js";
