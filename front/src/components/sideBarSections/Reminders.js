@@ -64,7 +64,7 @@ function Row(props) {
         <TableCell component="th" scope="reminder">
           {reminder.username}
         </TableCell>
-        <TableCell align="right">{reminder.number}</TableCell>
+        <TableCell align="right">{reminder.reminders.length}</TableCell>
         <TableCell align="right">{reminder.reminders[0].time}</TableCell>
       </TableRow>
       <TableRow>
@@ -107,7 +107,6 @@ function Row(props) {
 const reminders = [
   {
     username: "NathanealV",
-    number: 3,
     reminders: [
       { name: "Take out the trash", time: "2020-05-22 13:28", complete: false },
       { name: "Take out the trash", time: "2020-05-22 13:28", complete: false },
