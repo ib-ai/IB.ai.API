@@ -104,7 +104,7 @@ function Row(props) {
                         <Checkbox disabled checked={voteRow.complete} />
                       </TableCell>
                       <TableCell align="center">
-                        {voteRow.approved == undefined ? (
+                        {voteRow.approved === undefined ? (
                           <WatchLaterIcon style={{ color: orange[300] }} />
                         ) : voteRow.approved ? (
                           <CheckCircleIcon style={{ color: green[300] }} />
