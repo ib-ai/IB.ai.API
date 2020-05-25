@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
@@ -75,6 +77,13 @@ const useStyles = makeStyles((theme) => ({
   },
   pos: {
     marginBottom: 12,
+  },
+  avatarCard: {
+    margin: 10,
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
   },
 }));
 
@@ -165,15 +174,24 @@ function Sidebar() {
       </List>
       <Divider />
       <Typography align="center">Signed in as:</Typography>
-      <Grid container direction="row" justify="center" alignItems="center">
-        <Avatar alt="username">H</Avatar>
-        <Grid item direction="column">
-          <Typography>RandomName</Typography>
-          <Typography>#1691</Typography>
-        </Grid>
-
-        <Grid container item direction="column"></Grid>
-      </Grid>
+      <Card className={classes.avatarCard}>
+        <CardContent>
+          <Grid
+            container
+            direction="row"
+            justify="space-around"
+            alignItems="center"
+          >
+            <Avatar alt="username" className={classes.large}>
+              H
+            </Avatar>
+            <div>
+              <Typography>RandomName</Typography>
+              <Typography>#1691</Typography>
+            </div>
+          </Grid>
+        </CardContent>
+      </Card>
     </div>
   );
 
@@ -191,14 +209,20 @@ function Sidebar() {
           >
             <MenuIcon />
           </IconButton>
-          <Avatar
-            className={classes.ibLogo}
-            alt="IB Logo"
-            src="../../ib-logo.svg"
-          />
-          <Button variant="outlined" color="inherit">
-            Logout
-          </Button>
+          <Grid justify="space-between" container>
+            <Grid item>
+              <Avatar
+                className={classes.ibLogo}
+                alt="IB Logo"
+                src="../../ib-logo.svg"
+              />
+            </Grid>
+            <Grid item>
+              <Button variant="outlined" color="inherit">
+                Logout
+              </Button>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
 
