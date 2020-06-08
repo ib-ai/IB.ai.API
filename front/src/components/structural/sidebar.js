@@ -29,6 +29,7 @@ import {
   Tags,
   UserSearch,
   Votes,
+  Links,
 } from "../sideBarSections/index.js";
 
 const drawerWidth = 240;
@@ -100,6 +101,7 @@ function Sidebar() {
     { id: "Monitor", comp: Monitor },
     { id: "Role IDs", comp: RoleIDs },
     { id: "Cassowaries", comp: Cassowaries },
+    { id: "Links", comp: Links },
   ];
 
   const sideBarHiddenState = {};
