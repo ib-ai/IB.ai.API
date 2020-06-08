@@ -5,6 +5,15 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import MaterialTable from "material-table";
+import {
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Button,
+  TextField,
+} from "@material-ui/core";
 
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
@@ -46,6 +55,30 @@ const useStyles = makeStyles({
 
 function Monitor() {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [tempDialogData, setDialogData] = React.useState({ note: "", uid: "" });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleInformation = () => {
+    setMonitors((prevState) => {
+      const data = [...prevState.data];
+      data.push({
+        name: "Name",
+        uid: tempDialogData.uid,
+        note: tempDialogData.note,
+        kicks: 0,
+      });
+      return { ...prevState, data };
+    });
+    setOpen(false);
+  };
 
   const [monitors, setMonitors] = React.useState({
     columns: [
@@ -73,9 +106,64 @@ function Monitor() {
   return (
     <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
       <div className={classes.root}>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Add New User</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To add a user to the monitor list, please enter the user id
+              followed by a quick note.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="uid"
+              label="User ID"
+              type="number"
+              fullWidth
+              value={tempDialogData.uid || ""}
+              onChange={(e) =>
+                setDialogData({ ...tempDialogData, uid: e.target.value })
+              }
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="note"
+              label="Quick Note"
+              type="text"
+              fullWidth
+              value={tempDialogData.note || ""}
+              onChange={(e) =>
+                setDialogData({ ...tempDialogData, note: e.target.value })
+              }
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleInformation} color="primary">
+              Add
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Card className={classes.cardDesign}>
           <CardContent>
             <MaterialTable
+              actions={[
+                {
+                  icon: Add,
+                  onClick: () => {
+                    handleClickOpen();
+                  },
+                  isFreeAction: true,
+                  tooltip: "Add New User",
+                },
+              ]}
               icons={{
                 Check: Check,
                 DetailPanel: ChevronRight,
@@ -99,17 +187,6 @@ function Monitor() {
               columns={monitors.columns}
               data={monitors.data}
               editable={{
-                onRowAdd: (newData) =>
-                  new Promise((resolve) => {
-                    setTimeout(() => {
-                      resolve();
-                      setMonitors((prevState) => {
-                        const data = [...prevState.data];
-                        data.push(newData);
-                        return { ...prevState, data };
-                      });
-                    }, 600);
-                  }),
                 onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
                     setTimeout(() => {
