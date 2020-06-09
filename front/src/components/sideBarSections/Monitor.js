@@ -75,6 +75,7 @@ function Monitor() {
         note: tempDialogData.note,
         kicks: 0,
       });
+      setDialogData({ note: "", uid: "" });
       return { ...prevState, data };
     });
     setOpen(false);
