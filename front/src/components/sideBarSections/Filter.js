@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles, MuiThemeProvider } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 
 import Card from "@material-ui/core/Card";
@@ -45,12 +45,16 @@ const useStyles = makeStyles({
   },
   resize: {
     fontSize: 13,
+    fontFamily: "Roboto Mono",
   },
 });
 
 const theme = createMuiTheme({
-  cardTypography: {
-    fontSize: 13,
+  typography: {
+    subtitle1: {
+      fontSize: 13,
+      fontFamily: "Roboto Mono, sans-serif",
+    },
   },
 });
 
@@ -65,11 +69,9 @@ function Filter() {
         field: "trigger",
         render: (rowData) => {
           return (
-            <ThemeProvider theme={theme}>
-              <Typography theme={theme.cardTypography}>
-                {rowData.trigger}
-              </Typography>
-            </ThemeProvider>
+            <MuiThemeProvider theme={theme}>
+              <Typography variant="subtitle1">{rowData.trigger}</Typography>
+            </MuiThemeProvider>
           );
         },
         editComponent: (props) => (
