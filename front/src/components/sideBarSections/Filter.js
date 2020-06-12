@@ -87,11 +87,11 @@ function Filter() {
         ),
       },
       {
-        title: "Filter Disable",
-        field: "disable",
+        title: "Filter Ping",
+        field: "ping",
         type: "boolean",
         render: (rowData) => {
-          return <Checkbox disabled checked={rowData.disable} />;
+          return <Checkbox disabled checked={rowData.ping} />;
         },
         editComponent: (props) => (
           <Checkbox
@@ -102,11 +102,11 @@ function Filter() {
       },
     ],
     data: [
-      { name: "N-word", trigger: "(*)", disable: true },
+      { name: "N-word", trigger: "(*)", ping: true },
       {
         name: "R-word",
         trigger: "(((",
-        disable: false,
+        ping: false,
       },
     ],
   });

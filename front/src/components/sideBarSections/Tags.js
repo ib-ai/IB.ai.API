@@ -87,11 +87,11 @@ function Tags() {
         ),
       },
       {
-        title: "Tag Ping",
-        field: "ping",
+        title: "Tag Disable",
+        field: "disable",
         type: "boolean",
         render: (rowData) => {
-          return <Checkbox disabled checked={rowData.ping} />;
+          return <Checkbox disabled checked={rowData.disable} />;
         },
         editComponent: (props) => (
           <Checkbox
@@ -102,11 +102,11 @@ function Tags() {
       },
     ],
     data: [
-      { trigger: "Mehmet", result: "Baran", ping: true },
+      { trigger: "Mehmet", result: "Baran", disable: true },
       {
         trigger: "Zerya Betül",
         result: "Baran",
-        ping: false,
+        disable: false,
       },
     ],
   });
