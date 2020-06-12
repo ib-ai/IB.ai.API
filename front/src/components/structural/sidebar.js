@@ -19,15 +19,15 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import {
   Cassowaries,
-  EmojiStats,
   Filter,
   RoleIDs,
+  // EmojiStats, Not ready
   Monitor,
   Notes,
   Reactions,
   Reminders,
   Tags,
-  UserSearch,
+  // UserSearch, Not ready
   Votes,
   Links,
 } from "../sideBarSections/index.js";
@@ -91,11 +91,11 @@ const useStyles = makeStyles((theme) => ({
 function Sidebar() {
   const sideBarCategories = [
     { id: "Tags", comp: Tags },
-    { id: "Emoji Stats", comp: EmojiStats },
     { id: "Reactions", comp: Reactions },
+    // { id: "Emoji Stats", comp: EmojiStats}, Not ready
     { id: "Filter", comp: Filter },
     { id: "Votes", comp: Votes },
-    { id: "User Search", comp: UserSearch },
+    // { id: "User Search", comp: UserSearch }, Not ready
     { id: "Notes", comp: Notes },
     { id: "Reminders", comp: Reminders },
     { id: "Monitor", comp: Monitor },
