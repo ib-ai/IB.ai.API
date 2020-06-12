@@ -1,13 +1,19 @@
 import React from "react";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import MaterialTable from "material-table";
-import TextField from "@material-ui/core/TextField";
-import Checkbox from "@material-ui/core/Checkbox";
+import {
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Button,
+  TextField,
+} from "@material-ui/core";
 
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
@@ -24,7 +30,6 @@ import Edit from "@material-ui/icons/Edit";
 import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
-import { Typography } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const useStyles = makeStyles({
@@ -48,65 +53,53 @@ const useStyles = makeStyles({
   },
 });
 
-const theme = createMuiTheme({
-  cardTypography: {
-    fontSize: 12,
-  },
-});
-
-function Tags() {
+function Monitor() {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [tempDialogData, setDialogData] = React.useState({ note: "", uid: "" });
 
-  const [tags, setTags] = React.useState({
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleInformation = () => {
+    setMonitors((prevState) => {
+      const data = [...prevState.data];
+      data.push({
+        name: "Name",
+        uid: tempDialogData.uid,
+        note: tempDialogData.note,
+        kicks: 0,
+      });
+      setDialogData({ note: "", uid: "" });
+      return { ...prevState, data };
+    });
+    setOpen(false);
+  };
+
+  const [monitors, setMonitors] = React.useState({
     columns: [
-      { title: "Tag Trigger", field: "trigger" },
-      {
-        title: "Tag Result",
-        field: "result",
-        render: (rowData) => {
-          return (
-            <ThemeProvider theme={theme}>
-              <Typography theme={theme.cardTypography}>
-                {rowData.result}
-              </Typography>
-            </ThemeProvider>
-          );
-        },
-        editComponent: (props) => (
-          <TextField
-            value={props.value}
-            fullWidth={true}
-            multiline={true}
-            InputProps={{
-              classes: {
-                input: classes.resize,
-              },
-            }}
-            onChange={(e) => props.onChange(e.target.value)}
-          />
-        ),
-      },
-      {
-        title: "Tag Ping",
-        field: "ping",
-        type: "boolean",
-        render: (rowData) => {
-          return <Checkbox disabled checked={rowData.ping} />;
-        },
-        editComponent: (props) => (
-          <Checkbox
-            checked={props.value || false}
-            onChange={(e) => props.onChange(e.target.checked)}
-          />
-        ),
-      },
+      { title: "User Name", field: "name" },
+      { title: "User ID", field: "uid" },
+      { title: "Quick Note", field: "note" },
+      { title: "Number Of Kicks", field: "kicks" },
     ],
     data: [
-      { trigger: "Mehmet", result: "Baran", ping: true },
       {
-        trigger: "Zerya Betül",
-        result: "Baran",
-        ping: false,
+        name: "Nope",
+        uid: 123187410923847,
+        note: "for being so cute",
+        kicks: 0,
+      },
+      {
+        name: "Confuzz",
+        uid: 123187410923847,
+        note: "for being so cute",
+        kicks: 0,
       },
     ],
   });
@@ -114,9 +107,64 @@ function Tags() {
   return (
     <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
       <div className={classes.root}>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Add New User</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To add a user to the monitor list, please enter the user id
+              followed by a quick note.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="uid"
+              label="User ID"
+              type="number"
+              fullWidth
+              value={tempDialogData.uid || ""}
+              onChange={(e) =>
+                setDialogData({ ...tempDialogData, uid: e.target.value })
+              }
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="note"
+              label="Quick Note"
+              type="text"
+              fullWidth
+              value={tempDialogData.note || ""}
+              onChange={(e) =>
+                setDialogData({ ...tempDialogData, note: e.target.value })
+              }
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleInformation} color="primary">
+              Add
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Card className={classes.cardDesign}>
           <CardContent>
             <MaterialTable
+              actions={[
+                {
+                  icon: Add,
+                  onClick: () => {
+                    handleClickOpen();
+                  },
+                  isFreeAction: true,
+                  tooltip: "Add New User",
+                },
+              ]}
               icons={{
                 Check: Check,
                 DetailPanel: ChevronRight,
@@ -136,27 +184,16 @@ function Tags() {
                 ResetSearch: Cancel,
                 SortArrow: KeyboardArrowUpIcon,
               }}
-              title="Tag List"
-              columns={tags.columns}
-              data={tags.data}
+              title="Monitor List"
+              columns={monitors.columns}
+              data={monitors.data}
               editable={{
-                onRowAdd: (newData) =>
-                  new Promise((resolve) => {
-                    setTimeout(() => {
-                      resolve();
-                      setTags((prevState) => {
-                        const data = [...prevState.data];
-                        data.push(newData);
-                        return { ...prevState, data };
-                      });
-                    }, 600);
-                  }),
                 onRowUpdate: (newData, oldData) =>
                   new Promise((resolve) => {
                     setTimeout(() => {
                       resolve();
                       if (oldData) {
-                        setTags((prevState) => {
+                        setMonitors((prevState) => {
                           const data = [...prevState.data];
                           data[data.indexOf(oldData)] = newData;
                           return { ...prevState, data };
@@ -168,7 +205,7 @@ function Tags() {
                   new Promise((resolve) => {
                     setTimeout(() => {
                       resolve();
-                      setTags((prevState) => {
+                      setMonitors((prevState) => {
                         const data = [...prevState.data];
                         data.splice(data.indexOf(oldData), 1);
                         return { ...prevState, data };
@@ -184,4 +221,4 @@ function Tags() {
   );
 }
 
-export default Tags;
+export default Monitor;

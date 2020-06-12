@@ -1,13 +1,17 @@
 import React from "react";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import MaterialTable from "material-table";
-import TextField from "@material-ui/core/TextField";
-import Checkbox from "@material-ui/core/Checkbox";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import Chip from "@material-ui/core/Chip";
 
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
@@ -24,12 +28,17 @@ import Edit from "@material-ui/icons/Edit";
 import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
-import { Typography } from "@material-ui/core";
+import { Checkbox } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
+  },
+  bullet: {
+    display: "inline-block",
+    margin: "0 2px",
+    transform: "scale(0.8)",
   },
   title: {
     fontSize: 14,
@@ -43,55 +52,108 @@ const useStyles = makeStyles({
     marginLeft: "20px",
     width: "100%",
   },
-  resize: {
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    maxWidth: 300,
+  },
+  chips: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+  chip: {
+    margin: 2,
+  },
+  noLabel: {
+    marginTop: theme.spacing(3),
+  },
+}));
+
+const theme = createMuiTheme({
+  cardTypography: {
     fontSize: 13,
   },
 });
 
-const theme = createMuiTheme({
-  cardTypography: {
-    fontSize: 12,
-  },
-});
+const allRoleIds = [
+  "0396839046893046",
+  "25982385825833535",
+  "20935823950298503",
+];
 
-function Tags() {
+function Cassowaries() {
   const classes = useStyles();
 
-  const [tags, setTags] = React.useState({
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  function getStyles(id, roleId, theme) {
+    return {
+      fontWeight:
+        roleId.indexOf(id) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+  // eslint-disable-next-line
+  const [roleIds, setRoleIds] = React.useState([]);
+
+  const [cassowaries, setCassowaries] = React.useState({
     columns: [
-      { title: "Tag Trigger", field: "trigger" },
+      { title: "Cassowary Name", field: "name" },
       {
-        title: "Tag Result",
-        field: "result",
+        title: "Cassowary Roles",
+        field: "roles",
         render: (rowData) => {
           return (
-            <ThemeProvider theme={theme}>
-              <Typography theme={theme.cardTypography}>
-                {rowData.result}
-              </Typography>
-            </ThemeProvider>
+            <div>
+              {rowData.roles.map((role) => (
+                <Chip label={role} className={classes.chip} />
+              ))}
+            </div>
           );
         },
         editComponent: (props) => (
-          <TextField
-            value={props.value}
-            fullWidth={true}
-            multiline={true}
-            InputProps={{
-              classes: {
-                input: classes.resize,
-              },
-            }}
-            onChange={(e) => props.onChange(e.target.value)}
-          />
+          <FormControl className={classes.formControl}>
+            <InputLabel>Roles</InputLabel>
+            <Select
+              multiple
+              value={!props.value ? [] : props.value}
+              onChange={(e) => props.onChange(e.target.value)}
+              input={<Input id="select-multiple-chip" />}
+              renderValue={(selected) => (
+                <div className={classes.chips}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} className={classes.chip} />
+                  ))}
+                </div>
+              )}
+              MenuProps={MenuProps}
+            >
+              {allRoleIds.map((id) => (
+                <MenuItem value={id} style={getStyles(id, roleIds, theme)}>
+                  {id}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         ),
       },
       {
-        title: "Tag Ping",
-        field: "ping",
+        title: "Penguin",
+        field: "penguin",
         type: "boolean",
         render: (rowData) => {
-          return <Checkbox disabled checked={rowData.ping} />;
+          return <Checkbox disabled checked={rowData.penguin} />;
         },
         editComponent: (props) => (
           <Checkbox
@@ -101,14 +163,7 @@ function Tags() {
         ),
       },
     ],
-    data: [
-      { trigger: "Mehmet", result: "Baran", ping: true },
-      {
-        trigger: "Zerya Betül",
-        result: "Baran",
-        ping: false,
-      },
-    ],
+    data: [{ id: 1, name: "Mehmet", roles: [allRoleIds[1]], penguin: true }],
   });
 
   return (
@@ -136,15 +191,15 @@ function Tags() {
                 ResetSearch: Cancel,
                 SortArrow: KeyboardArrowUpIcon,
               }}
-              title="Tag List"
-              columns={tags.columns}
-              data={tags.data}
+              title="Cassowary List"
+              columns={cassowaries.columns}
+              data={cassowaries.data}
               editable={{
                 onRowAdd: (newData) =>
                   new Promise((resolve) => {
                     setTimeout(() => {
                       resolve();
-                      setTags((prevState) => {
+                      setCassowaries((prevState) => {
                         const data = [...prevState.data];
                         data.push(newData);
                         return { ...prevState, data };
@@ -156,7 +211,7 @@ function Tags() {
                     setTimeout(() => {
                       resolve();
                       if (oldData) {
-                        setTags((prevState) => {
+                        setCassowaries((prevState) => {
                           const data = [...prevState.data];
                           data[data.indexOf(oldData)] = newData;
                           return { ...prevState, data };
@@ -168,7 +223,7 @@ function Tags() {
                   new Promise((resolve) => {
                     setTimeout(() => {
                       resolve();
-                      setTags((prevState) => {
+                      setCassowaries((prevState) => {
                         const data = [...prevState.data];
                         data.splice(data.indexOf(oldData), 1);
                         return { ...prevState, data };
@@ -184,4 +239,4 @@ function Tags() {
   );
 }
 
-export default Tags;
+export default Cassowaries;

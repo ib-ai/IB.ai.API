@@ -1,13 +1,10 @@
 import React from "react";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import MaterialTable from "material-table";
-import TextField from "@material-ui/core/TextField";
-import Checkbox from "@material-ui/core/Checkbox";
 
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
@@ -24,7 +21,6 @@ import Edit from "@material-ui/icons/Edit";
 import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
-import { Typography } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const useStyles = makeStyles({
@@ -43,71 +39,22 @@ const useStyles = makeStyles({
     marginLeft: "20px",
     width: "100%",
   },
-  resize: {
-    fontSize: 13,
-  },
 });
 
-const theme = createMuiTheme({
-  cardTypography: {
-    fontSize: 12,
-  },
-});
-
-function Tags() {
+function RoleIDs() {
   const classes = useStyles();
 
-  const [tags, setTags] = React.useState({
+  const [roleIDs, setRoleIDs] = React.useState({
     columns: [
-      { title: "Tag Trigger", field: "trigger" },
+      { title: "Role Name", field: "name" },
       {
-        title: "Tag Result",
-        field: "result",
-        render: (rowData) => {
-          return (
-            <ThemeProvider theme={theme}>
-              <Typography theme={theme.cardTypography}>
-                {rowData.result}
-              </Typography>
-            </ThemeProvider>
-          );
-        },
-        editComponent: (props) => (
-          <TextField
-            value={props.value}
-            fullWidth={true}
-            multiline={true}
-            InputProps={{
-              classes: {
-                input: classes.resize,
-              },
-            }}
-            onChange={(e) => props.onChange(e.target.value)}
-          />
-        ),
-      },
-      {
-        title: "Tag Ping",
-        field: "ping",
-        type: "boolean",
-        render: (rowData) => {
-          return <Checkbox disabled checked={rowData.ping} />;
-        },
-        editComponent: (props) => (
-          <Checkbox
-            checked={props.value || false}
-            onChange={(e) => props.onChange(e.target.checked)}
-          />
-        ),
+        title: "Role ID",
+        field: "id",
       },
     ],
     data: [
-      { trigger: "Mehmet", result: "Baran", ping: true },
-      {
-        trigger: "Zerya Betül",
-        result: "Baran",
-        ping: false,
-      },
+      { name: "Helper", id: 12345567 },
+      { name: "Moderator", id: 123142345234 },
     ],
   });
 
@@ -136,15 +83,15 @@ function Tags() {
                 ResetSearch: Cancel,
                 SortArrow: KeyboardArrowUpIcon,
               }}
-              title="Tag List"
-              columns={tags.columns}
-              data={tags.data}
+              title="ID List"
+              columns={roleIDs.columns}
+              data={roleIDs.data}
               editable={{
                 onRowAdd: (newData) =>
                   new Promise((resolve) => {
                     setTimeout(() => {
                       resolve();
-                      setTags((prevState) => {
+                      setRoleIDs((prevState) => {
                         const data = [...prevState.data];
                         data.push(newData);
                         return { ...prevState, data };
@@ -156,7 +103,7 @@ function Tags() {
                     setTimeout(() => {
                       resolve();
                       if (oldData) {
-                        setTags((prevState) => {
+                        setRoleIDs((prevState) => {
                           const data = [...prevState.data];
                           data[data.indexOf(oldData)] = newData;
                           return { ...prevState, data };
@@ -168,7 +115,7 @@ function Tags() {
                   new Promise((resolve) => {
                     setTimeout(() => {
                       resolve();
-                      setTags((prevState) => {
+                      setRoleIDs((prevState) => {
                         const data = [...prevState.data];
                         data.splice(data.indexOf(oldData), 1);
                         return { ...prevState, data };
@@ -184,4 +131,4 @@ function Tags() {
   );
 }
 
-export default Tags;
+export default RoleIDs;

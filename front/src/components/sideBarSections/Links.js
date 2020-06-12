@@ -7,7 +7,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import MaterialTable from "material-table";
 import TextField from "@material-ui/core/TextField";
-import Checkbox from "@material-ui/core/Checkbox";
 
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
@@ -24,7 +23,7 @@ import Edit from "@material-ui/icons/Edit";
 import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
-import { Typography } from "@material-ui/core";
+import { Typography, Link } from "@material-ui/core";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 
 const useStyles = makeStyles({
@@ -54,20 +53,22 @@ const theme = createMuiTheme({
   },
 });
 
-function Tags() {
+function Links() {
   const classes = useStyles();
 
-  const [tags, setTags] = React.useState({
+  const [links, setLinks] = React.useState({
     columns: [
-      { title: "Tag Trigger", field: "trigger" },
+      { title: "Name", field: "name" },
       {
-        title: "Tag Result",
-        field: "result",
+        title: "Link",
+        field: "link",
         render: (rowData) => {
           return (
             <ThemeProvider theme={theme}>
               <Typography theme={theme.cardTypography}>
-                {rowData.result}
+                <Link href={rowData.link} target="_blank">
+                  {rowData.link}
+                </Link>
               </Typography>
             </ThemeProvider>
           );
@@ -86,29 +87,8 @@ function Tags() {
           />
         ),
       },
-      {
-        title: "Tag Ping",
-        field: "ping",
-        type: "boolean",
-        render: (rowData) => {
-          return <Checkbox disabled checked={rowData.ping} />;
-        },
-        editComponent: (props) => (
-          <Checkbox
-            checked={props.value || false}
-            onChange={(e) => props.onChange(e.target.checked)}
-          />
-        ),
-      },
     ],
-    data: [
-      { trigger: "Mehmet", result: "Baran", ping: true },
-      {
-        trigger: "Zerya Betül",
-        result: "Baran",
-        ping: false,
-      },
-    ],
+    data: [{ name: "Google", link: "https://www.google.com.au" }],
   });
 
   return (
@@ -136,15 +116,15 @@ function Tags() {
                 ResetSearch: Cancel,
                 SortArrow: KeyboardArrowUpIcon,
               }}
-              title="Tag List"
-              columns={tags.columns}
-              data={tags.data}
+              title="Useful Links"
+              columns={links.columns}
+              data={links.data}
               editable={{
                 onRowAdd: (newData) =>
                   new Promise((resolve) => {
                     setTimeout(() => {
                       resolve();
-                      setTags((prevState) => {
+                      setLinks((prevState) => {
                         const data = [...prevState.data];
                         data.push(newData);
                         return { ...prevState, data };
@@ -156,7 +136,7 @@ function Tags() {
                     setTimeout(() => {
                       resolve();
                       if (oldData) {
-                        setTags((prevState) => {
+                        setLinks((prevState) => {
                           const data = [...prevState.data];
                           data[data.indexOf(oldData)] = newData;
                           return { ...prevState, data };
@@ -168,7 +148,7 @@ function Tags() {
                   new Promise((resolve) => {
                     setTimeout(() => {
                       resolve();
-                      setTags((prevState) => {
+                      setLinks((prevState) => {
                         const data = [...prevState.data];
                         data.splice(data.indexOf(oldData), 1);
                         return { ...prevState, data };
@@ -184,4 +164,4 @@ function Tags() {
   );
 }
 
-export default Tags;
+export default Links;
