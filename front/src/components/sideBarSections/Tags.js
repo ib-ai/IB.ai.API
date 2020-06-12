@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import MaterialTable from "material-table";
 import TextField from "@material-ui/core/TextField";
+import Checkbox from "@material-ui/core/Checkbox";
 
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
@@ -85,12 +86,27 @@ function Tags() {
           />
         ),
       },
+      {
+        title: "Tag Ping",
+        field: "ping",
+        type: "boolean",
+        render: (rowData) => {
+          return <Checkbox disabled checked={rowData.ping} />;
+        },
+        editComponent: (props) => (
+          <Checkbox
+            checked={props.value || false}
+            onChange={(e) => props.onChange(e.target.checked)}
+          />
+        ),
+      },
     ],
     data: [
-      { trigger: "Mehmet", result: "Baran" },
+      { trigger: "Mehmet", result: "Baran", ping: true },
       {
         trigger: "Zerya Betül",
         result: "Baran",
+        ping: false,
       },
     ],
   });
