@@ -1,6 +1,5 @@
 import React from "react";
-import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
-import { createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -44,13 +43,7 @@ const useStyles = makeStyles({
     width: "100%",
   },
   resize: {
-    fontSize: 13,
-  },
-});
-
-const theme = createMuiTheme({
-  cardTypography: {
-    fontSize: 12,
+    fontSize: 14,
   },
 });
 
@@ -65,11 +58,7 @@ function Tags() {
         field: "result",
         render: (rowData) => {
           return (
-            <ThemeProvider theme={theme}>
-              <Typography theme={theme.cardTypography}>
-                {rowData.result}
-              </Typography>
-            </ThemeProvider>
+            <Typography className={classes.resize}>{rowData.result}</Typography>
           );
         },
         editComponent: (props) => (
