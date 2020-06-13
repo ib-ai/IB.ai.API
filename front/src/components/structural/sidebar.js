@@ -90,24 +90,24 @@ const useStyles = makeStyles((theme) => ({
 
 function Sidebar() {
   const sideBarCategories = [
-    { id: "Tags", comp: Tags },
-    { id: "Reactions", comp: Reactions },
-    // { id: "Emoji Stats", comp: EmojiStats}, Not ready
-    { id: "Filter", comp: Filter },
-    { id: "Votes", comp: Votes },
+    { id: "Tags", comp: Tags, default: false },
+    { id: "Reactions", comp: Reactions, default: false },
+    // { id: "Emoji Stats", comp: EmojiStats, default: false}, Not ready
+    { id: "Filter", comp: Filter, default: false },
+    { id: "Votes", comp: Votes, default: false },
     // { id: "User Search", comp: UserSearch }, Not ready
-    { id: "Notes", comp: Notes },
-    { id: "Reminders", comp: Reminders },
-    { id: "Monitor", comp: Monitor },
-    { id: "Role IDs", comp: RoleIDs },
-    { id: "Cassowaries", comp: Cassowaries },
-    { id: "Links", comp: Links },
+    { id: "Notes", comp: Notes, default: false },
+    { id: "Reminders", comp: Reminders, default: false },
+    { id: "Monitor", comp: Monitor, default: false },
+    { id: "Role IDs", comp: RoleIDs, default: false },
+    { id: "Cassowaries", comp: Cassowaries, default: false },
+    { id: "Links", comp: Links, default: true },
   ];
 
   const sideBarHiddenState = {};
 
   sideBarCategories.map((cat) => {
-    sideBarHiddenState[cat.id] = false;
+    sideBarHiddenState[cat.id] = cat.default;
   });
 
   const previousValues = React.useRef(sideBarHiddenState);
@@ -130,35 +130,32 @@ function Sidebar() {
     setSideBar(newArray);
   };
 
-  function addToGrid(id) {
-    setCards((c) => c.concat({ id: id }));
-  }
-
-  function removeFromGrid(componentId) {
-    setCards((c) => c.filter(({ id }) => id !== componentId));
-  }
-
-  useEffect(() => {
-    if (firstRun === true) {
-      setFirstRun(false);
-    }
+  function renderGrid() {
     Object.keys(sideBarShown).map((key) => {
       if (sideBarShown[key] !== previousValues.current[key]) {
         if (sideBarShown[key] === true) {
-          addToGrid(key);
+          setCards((c) => c.concat({ id: key }));
         } else {
-          removeFromGrid(key);
+          setCards((c) => c.filter(({ id }) => id !== key));
         }
 
         previousValues.current = sideBarShown;
       }
     });
-  }, [
-    addToGrid,
-    removeFromGrid,
-    firstRun,
-    ...Object.keys(sideBarShown).map((key) => sideBarShown[key]),
-  ]);
+  }
+
+  useEffect(() => {
+    if (firstRun) {
+      Object.keys(sideBarShown).map((key) => {
+        if (sideBarShown[key] === true) {
+          setCards((c) => c.concat({ id: key }));
+        }
+        previousValues.current = sideBarShown;
+      });
+      setFirstRun(false);
+    }
+    renderGrid();
+  }, [...Object.keys(sideBarShown).map((key) => sideBarShown[key])]);
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
