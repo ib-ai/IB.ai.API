@@ -14,7 +14,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Toolbar from "@material-ui/core/Toolbar";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import { Typography, Divider, Grid } from "@material-ui/core";
+import { Typography, Divider, Grid, Box } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import {
@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    marginRight: 40,
   },
   closeMenuButton: {
     marginRight: "auto",
@@ -86,6 +85,9 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(7),
     height: theme.spacing(7),
   },
+  fullWidth: {
+    width: "100%",
+  },
 }));
 
 function Sidebar() {
@@ -106,7 +108,7 @@ function Sidebar() {
 
   const sideBarHiddenState = {};
 
-  sideBarCategories.map((cat) => {
+  sideBarCategories.forEach((cat) => {
     sideBarHiddenState[cat.id] = cat.default;
   });
 
@@ -131,7 +133,7 @@ function Sidebar() {
   };
 
   function renderGrid() {
-    Object.keys(sideBarShown).map((key) => {
+    Object.keys(sideBarShown).forEach((key) => {
       if (sideBarShown[key] !== previousValues.current[key]) {
         if (sideBarShown[key] === true) {
           setCards((c) => c.concat({ id: key }));
@@ -146,7 +148,7 @@ function Sidebar() {
 
   useEffect(() => {
     if (firstRun) {
-      Object.keys(sideBarShown).map((key) => {
+      Object.keys(sideBarShown).forEach((key) => {
         if (sideBarShown[key] === true) {
           setCards((c) => c.concat({ id: key }));
         }
@@ -263,20 +265,55 @@ function Sidebar() {
       </nav>
       <div className={classes.content}>
         <div className={classes.toolbar} />
-        <Grid
-          container
-          direction="row"
-          alignContent="center"
-          alignItems="center"
-          wrap="wrap"
-          spacing={4}
-        >
-          {cardsInGrid.map((card) => {
-            const Component = sideBarCategories.find(
-              (cat) => cat.id === card.id
-            ).comp;
-            return <Component key={card.id} />;
-          })}
+        <Grid container direction="row" className={classes.fullWidth}>
+          <Grid item xs={6} className={classes.fullWidth}>
+            <Grid
+              container
+              direction="column"
+              alignContent="center"
+              alignItems="center"
+              spacing={4}
+              className={classes.fullWidth}
+            >
+              {cardsInGrid
+                .filter((card, index) => index % 2 === 0)
+                .map((card) => {
+                  const Component = sideBarCategories.find(
+                    (cat) => cat.id === card.id
+                  ).comp;
+                  return (
+                    <Box width={1} padding={2.5}>
+                      <Component key={card.id} />
+                    </Box>
+                  );
+                })}
+            </Grid>
+          </Grid>
+          <Grid item xs={6} className={classes.fullWidth}>
+            <Grid
+              container
+              direction="column"
+              alignContent="center"
+              alignItems="center"
+              spacing={4}
+              flexGrow={1}
+              zeroMinWidth
+              className={classes.fullWidth}
+            >
+              {cardsInGrid
+                .filter((card, index) => index % 2 !== 0)
+                .map((card) => {
+                  const Component = sideBarCategories.find(
+                    (cat) => cat.id === card.id
+                  ).comp;
+                  return (
+                    <Box width={1} padding={2.5}>
+                      <Component key={card.id} />
+                    </Box>
+                  );
+                })}
+            </Grid>
+          </Grid>
         </Grid>
       </div>
     </div>
