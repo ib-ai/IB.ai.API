@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { isMobileOnly } from "react-device-detect";
+
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
@@ -265,56 +267,78 @@ function Sidebar() {
       </nav>
       <div className={classes.content}>
         <div className={classes.toolbar} />
-        <Grid container direction="row" className={classes.fullWidth}>
-          <Grid item xs={6} className={classes.fullWidth}>
-            <Grid
-              container
-              direction="column"
-              alignContent="center"
-              alignItems="center"
-              spacing={4}
-              className={classes.fullWidth}
-            >
-              {cardsInGrid
-                .filter((card, index) => index % 2 === 0)
-                .map((card) => {
-                  const Component = sideBarCategories.find(
-                    (cat) => cat.id === card.id
-                  ).comp;
-                  return (
-                    <Box width={1} padding={2.5}>
-                      <Component key={card.id} />
-                    </Box>
-                  );
-                })}
+        {isMobileOnly ? (
+          <Grid
+            container
+            direction="column"
+            alignContent="center"
+            alignItems="center"
+            spacing={4}
+            className={classes.fullWidth}
+          >
+            {cardsInGrid.map((card) => {
+              const Component = sideBarCategories.find(
+                (cat) => cat.id === card.id
+              ).comp;
+              return (
+                <Box width={1} padding={2.5}>
+                  <Component key={card.id} />
+                </Box>
+              );
+            })}
+          </Grid>
+        ) : (
+          <Grid container direction="row" className={classes.fullWidth}>
+            <Grid item xs={6} className={classes.fullWidth}>
+              <Grid
+                container
+                direction="column"
+                alignContent="center"
+                alignItems="center"
+                spacing={4}
+                className={classes.fullWidth}
+              >
+                {cardsInGrid
+                  .filter((card, index) => index % 2 === 0)
+                  .map((card) => {
+                    const Component = sideBarCategories.find(
+                      (cat) => cat.id === card.id
+                    ).comp;
+                    return (
+                      <Box width={1} padding={2.5}>
+                        <Component key={card.id} />
+                      </Box>
+                    );
+                  })}
+              </Grid>
+            </Grid>
+            <Grid item xs={6} className={classes.fullWidth}>
+              <Grid
+                container
+                direction="column"
+                alignContent="center"
+                alignItems="center"
+                spacing={4}
+                flexGrow={1}
+                zeroMinWidth
+                className={classes.fullWidth}
+              >
+                {cardsInGrid
+                  .filter((card, index) => index % 2 !== 0)
+                  .map((card) => {
+                    const Component = sideBarCategories.find(
+                      (cat) => cat.id === card.id
+                    ).comp;
+                    return (
+                      <Box width={1} padding={2.5}>
+                        <Component key={card.id} />
+                      </Box>
+                    );
+                  })}
+              </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={6} className={classes.fullWidth}>
-            <Grid
-              container
-              direction="column"
-              alignContent="center"
-              alignItems="center"
-              spacing={4}
-              flexGrow={1}
-              zeroMinWidth
-              className={classes.fullWidth}
-            >
-              {cardsInGrid
-                .filter((card, index) => index % 2 !== 0)
-                .map((card) => {
-                  const Component = sideBarCategories.find(
-                    (cat) => cat.id === card.id
-                  ).comp;
-                  return (
-                    <Box width={1} padding={2.5}>
-                      <Component key={card.id} />
-                    </Box>
-                  );
-                })}
-            </Grid>
-          </Grid>
-        </Grid>
+        )}
       </div>
     </div>
   );
