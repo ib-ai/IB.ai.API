@@ -8,7 +8,6 @@ import MaterialTable from "material-table";
 import {
   Dialog,
   DialogTitle,
-  DialogActions,
   DialogContent,
   DialogContentText,
   Button,
@@ -19,9 +18,10 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  TableHead,
   Table,
-  Box,
+  Stepper,
+  Step,
+  StepLabel,
 } from "@material-ui/core";
 
 import Search from "@material-ui/icons/Search";
@@ -64,53 +64,6 @@ const useStyles = makeStyles({
   },
 });
 
-function NoteCollapse(props) {
-  const { note } = props;
-  const [collapseOpen, setCollapseOpen] = React.useState(false);
-  return (
-    <Table>
-      <TableBody>
-        <TableRow>
-          <TableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => setCollapseOpen(!collapseOpen)}
-            >
-              {collapseOpen ? (
-                <KeyboardArrowUpIcon />
-              ) : (
-                <KeyboardArrowDownIcon />
-              )}
-            </IconButton>
-          </TableCell>
-          <TableCell>{note.timestamp}</TableCell>
-          <TableCell>{"Last edited by: " + note.staffuid}</TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={collapseOpen} timeout="auto" unmountOnExit>
-              <Table size="small" aria-label="notes">
-                <TableBody>
-                  <TableCell>
-                    <IconButton>
-                      <Delete />
-                    </IconButton>
-                    <IconButton>
-                      <Edit />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>{note.text}</TableCell>
-                </TableBody>
-              </Table>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
-  );
-}
-
 function Notes() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -118,12 +71,27 @@ function Notes() {
   const [notesTransition, setNotesTransition] = React.useState(false);
   const [cardData, setCardData] = React.useState({});
 
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = ["Enter User ID", "Add Note"];
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const [collapseOpen, setCollapseOpen] = React.useState({});
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setDialogData({ note: "", uid: "" });
+    setActiveStep(0);
   };
 
   const handleInformation = () => {
@@ -139,6 +107,44 @@ function Notes() {
       return { ...prevState, data };
     });
     setOpen(false);
+    setActiveStep(0);
+  };
+
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <TextField
+            autoFocus
+            margin="dense"
+            id="uid"
+            label="User ID"
+            type="number"
+            fullWidth
+            value={tempDialogData.uid || ""}
+            onChange={(e) =>
+              setDialogData({ ...tempDialogData, uid: e.target.value })
+            }
+          />
+        );
+      case 1:
+        return (
+          <TextField
+            autoFocus
+            margin="dense"
+            id="note"
+            label="Quick Note"
+            type="text"
+            fullWidth
+            value={tempDialogData.note || ""}
+            onChange={(e) =>
+              setDialogData({ ...tempDialogData, note: e.target.value })
+            }
+          />
+        );
+      default:
+        return "Unknown step";
+    }
   };
 
   const [notes, setNotes] = React.useState({
@@ -154,11 +160,13 @@ function Notes() {
         number: 2,
         notes: [
           {
+            id: 1,
             text: "Note 1",
             timestamp: "2020-06-11",
             staffuid: "1237192371298731",
           },
           {
+            id: 2,
             text: "Note 2",
             timestamp: "2020-06-11",
             staffuid: "1237192371298731",
@@ -171,13 +179,14 @@ function Notes() {
         number: 2,
         notes: [
           {
+            id: 1,
             text: "Note 1",
             timestamp: "2020-06-11",
             staffuid: "1237192371298731",
           },
           {
-            text:
-              "When I saw this morning who had gotten the moderator positions, I was not surprised with Jasmine. What I was taken aback by is this person named “cotton bud [llb/long]” or “ryerfryer#5279”. In the two months of my trial moderator stay, I truthfully do not remember interacting once with Ryan and was surprised that someone who I had either not seen or had seen but forgot got the moderator position. I come to find out that the reason why I had never seen him was because he was away for one and a half months. One and a half months out of the two-month trial period. And the times where he was here, he was either relatively inactive by just lurking or when he did make a ‘public call,’ he made an incorrect call with Lime. As Arraying said in response to me mentioning this concern in off-topic-1, “because we’d rather give the benefit of the doubt. It’s a trial system after all, if we had a perfect set of applicants we would have not had it.” That encapsulates some of my concerns.",
+            id: 2,
+            text: "Note 2",
             timestamp: "2020-06-11",
             staffuid: "1237192371298731",
           },
@@ -197,42 +206,58 @@ function Notes() {
           <DialogTitle id="form-dialog-title">Add New User</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To add a user to the monitor list, please enter the user id and a
-              note.
+              To add a user note, please enter the user ID and the note.
             </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="uid"
-              label="User ID"
-              type="number"
-              fullWidth
-              value={tempDialogData.uid || ""}
-              onChange={(e) =>
-                setDialogData({ ...tempDialogData, uid: e.target.value })
-              }
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="note"
-              label="Quick Note"
-              type="text"
-              fullWidth
-              value={tempDialogData.note || ""}
-              onChange={(e) =>
-                setDialogData({ ...tempDialogData, note: e.target.value })
-              }
-            />
+            <Stepper activeStep={activeStep}>
+              {steps.map((label, index) => {
+                const stepProps = {};
+                const labelProps = {};
+
+                return (
+                  <Step key={label} {...stepProps}>
+                    <StepLabel {...labelProps}>{label}</StepLabel>
+                  </Step>
+                );
+              })}
+            </Stepper>
+            <div>
+              {getStepContent(activeStep)}
+
+              <div>
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  className={classes.button}
+                >
+                  Back
+                </Button>
+
+                {activeStep !== steps.length - 1 ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    className={classes.button}
+                  >
+                    Next
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleInformation}
+                    className={classes.button}
+                  >
+                    Finish
+                  </Button>
+                )}
+
+                <Button onClick={handleClose} className={classes.button}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleInformation} color="primary">
-              Add
-            </Button>
-          </DialogActions>
         </Dialog>
         {notesTransition ? (
           <Card className={classes.cardDesign}>
@@ -249,7 +274,68 @@ function Notes() {
                 <Typography variant="h5">{cardData.name}</Typography>
               </Grid>
               {cardData.notes.map((note) => (
-                <NoteCollapse note={note} />
+                <Table>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        <IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={() => {
+                            const userId = cardData.uid;
+                            const prevState = { ...collapseOpen[userId] };
+
+                            const data = {
+                              ...prevState,
+                              [note.id]: !prevState[note.id],
+                            };
+
+                            setCollapseOpen({
+                              ...collapseOpen,
+                              [userId]: data,
+                            });
+                          }}
+                        >
+                          {collapseOpen[cardData.uid][note.id] ? (
+                            <KeyboardArrowUpIcon />
+                          ) : (
+                            <KeyboardArrowDownIcon />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>{note.timestamp}</TableCell>
+                      <TableCell>
+                        {"Last edited by: " + note.staffuid}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        style={{ paddingBottom: 0, paddingTop: 0 }}
+                        colSpan={6}
+                      >
+                        <Collapse
+                          in={collapseOpen[cardData.uid][note.id]}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          <Table size="small" aria-label="notes">
+                            <TableBody>
+                              <TableCell>
+                                <IconButton>
+                                  <Delete />
+                                </IconButton>
+                                <IconButton>
+                                  <Edit />
+                                </IconButton>
+                              </TableCell>
+                              <TableCell>{note.text}</TableCell>
+                            </TableBody>
+                          </Table>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
               ))}
             </CardContent>
           </Card>
@@ -291,22 +377,19 @@ function Notes() {
                 data={notes.data}
                 onRowClick={(event, rowData) => {
                   setCardData(rowData);
+                  rowData.notes.forEach((note) => {
+                    const userId = rowData.uid;
+
+                    const newData = {
+                      ...collapseOpen.userId,
+                      [note.id]: false,
+                    };
+
+                    setCollapseOpen({ [userId]: newData });
+                  });
                   setNotesTransition(true);
                 }}
                 editable={{
-                  onRowUpdate: (newData, oldData) =>
-                    new Promise((resolve) => {
-                      setTimeout(() => {
-                        resolve();
-                        if (oldData) {
-                          setNotes((prevState) => {
-                            const data = [...prevState.data];
-                            data[data.indexOf(oldData)] = newData;
-                            return { ...prevState, data };
-                          });
-                        }
-                      }, 600);
-                    }),
                   onRowDelete: (oldData) =>
                     new Promise((resolve) => {
                       setTimeout(() => {
