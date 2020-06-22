@@ -22,6 +22,7 @@ import {
   Stepper,
   Step,
   StepLabel,
+  Box,
 } from "@material-ui/core";
 
 import Search from "@material-ui/icons/Search";
@@ -70,6 +71,12 @@ function Notes() {
   const [tempDialogData, setDialogData] = React.useState({ note: "", uid: "" });
   const [notesTransition, setNotesTransition] = React.useState(false);
   const [cardData, setCardData] = React.useState({});
+
+  const [editInformation, setEditInformation] = React.useState({
+    id: 0,
+    edit: false,
+    note: "",
+  });
 
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = ["Enter User ID", "Add Note"];
@@ -273,7 +280,7 @@ function Notes() {
                 </IconButton>
                 <Typography variant="h5">{cardData.name}</Typography>
               </Grid>
-              {cardData.notes.map((note) => (
+              {cardData.notes.map((note, index) => (
                 <Table>
                   <TableBody>
                     <TableRow>
@@ -320,15 +327,103 @@ function Notes() {
                         >
                           <Table size="small" aria-label="notes">
                             <TableBody>
-                              <TableCell>
-                                <IconButton>
-                                  <Delete />
-                                </IconButton>
-                                <IconButton>
-                                  <Edit />
-                                </IconButton>
+                              {editInformation["edit"] &&
+                              editInformation["id"] === note.id ? (
+                                <TableCell>
+                                  <IconButton
+                                    onClick={() => {
+                                      setEditInformation({
+                                        id: 0,
+                                        edit: false,
+                                        note: "",
+                                      });
+                                    }}
+                                  >
+                                    <Cancel />
+                                  </IconButton>
+                                  <IconButton
+                                    onClick={() => {
+                                      const prevState = [...cardData.notes];
+                                      prevState[index]["text"] =
+                                        editInformation["note"];
+
+                                      setCardData({
+                                        ...cardData,
+                                        notes: prevState,
+                                      });
+
+                                      setEditInformation({
+                                        id: 0,
+                                        edit: false,
+                                        note: "",
+                                      });
+                                    }}
+                                  >
+                                    <Check />
+                                  </IconButton>
+                                </TableCell>
+                              ) : (
+                                <TableCell>
+                                  <IconButton
+                                    onClick={() => {
+                                      const prevState = { ...cardData.notes };
+                                      const myKeys = Object.keys(prevState);
+
+                                      var newKeys = myKeys.filter(
+                                        (item) => myKeys.indexOf(item) !== index
+                                      );
+
+                                      var matchingValues = newKeys.map(
+                                        (key) => {
+                                          return prevState[key];
+                                        }
+                                      );
+
+                                      setCardData({
+                                        ...cardData,
+                                        notes: matchingValues,
+                                      });
+                                    }}
+                                  >
+                                    <Delete />
+                                  </IconButton>
+                                  <IconButton
+                                    onClick={() => {
+                                      setEditInformation({
+                                        id: note.id,
+                                        edit: true,
+                                        note: note.text,
+                                      });
+                                    }}
+                                  >
+                                    <Edit />
+                                  </IconButton>
+                                </TableCell>
+                              )}
+
+                              <TableCell width="70%">
+                                {editInformation["edit"] &&
+                                editInformation["id"] === note.id ? (
+                                  <TextField
+                                    value={editInformation["note"]}
+                                    fullWidth={true}
+                                    multiline={true}
+                                    InputProps={{
+                                      classes: {
+                                        input: classes.resize,
+                                      },
+                                    }}
+                                    onChange={(e) =>
+                                      setEditInformation({
+                                        ...editInformation,
+                                        note: e.target.value,
+                                      })
+                                    }
+                                  />
+                                ) : (
+                                  <Typography>{note.text}</Typography>
+                                )}
                               </TableCell>
-                              <TableCell>{note.text}</TableCell>
                             </TableBody>
                           </Table>
                         </Collapse>
