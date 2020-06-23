@@ -90,6 +90,9 @@ const useStyles = makeStyles((theme) => ({
   fullWidth: {
     width: "100%",
   },
+  monospace: {
+    fontFamily: "Roboto Mono",
+  },
 }));
 
 function Sidebar() {
@@ -189,8 +192,8 @@ function Sidebar() {
               H
             </Avatar>
             <div>
-              <Typography>RandomName</Typography>
-              <Typography>#1691</Typography>
+              <Typography className={classes.monospace}>RandomName</Typography>
+              <Typography className={classes.monospace}>#1691</Typography>
             </div>
           </Grid>
         </CardContent>
