@@ -22,7 +22,7 @@ import {
   Stepper,
   Step,
   StepLabel,
-  Box,
+  Avatar,
 } from "@material-ui/core";
 
 import Search from "@material-ui/icons/Search";
@@ -44,7 +44,7 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
   },
@@ -63,7 +63,24 @@ const useStyles = makeStyles({
   resize: {
     fontSize: 13,
   },
-});
+  avatarCard: {
+    margin: 10,
+  },
+  stepperText: {
+    paddingBottom: 20,
+  },
+  stepperButton: {
+    marginRight: theme.spacing(1),
+  },
+  large: {
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+    marginBottom: theme.spacing(2),
+  },
+  monospace: {
+    fontFamily: "Roboto Mono",
+  },
+}));
 
 function Notes() {
   const classes = useStyles();
@@ -79,7 +96,7 @@ function Notes() {
   });
 
   const [activeStep, setActiveStep] = React.useState(0);
-  const steps = ["Enter User ID", "Add Note"];
+  const steps = ["Enter User ID", "User Info", "Add Note"];
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -126,8 +143,9 @@ function Notes() {
             margin="dense"
             id="uid"
             label="User ID"
-            type="number"
+            type="tel"
             fullWidth
+            className={classes.stepperText}
             value={tempDialogData.uid || ""}
             onChange={(e) =>
               setDialogData({ ...tempDialogData, uid: e.target.value })
@@ -135,6 +153,58 @@ function Notes() {
           />
         );
       case 1:
+        return (
+          <Card className={classes.avatarCard}>
+            <CardContent>
+              <Grid
+                container
+                direction="row"
+                justify="space-around"
+                alignItems="center"
+              >
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    <Avatar alt="username" className={classes.large}>
+                      H
+                    </Avatar>
+
+                    <Typography className={classes.monospace}>
+                      RandomName
+                    </Typography>
+                    <Typography className={classes.monospace}>#1691</Typography>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="space-evenly"
+                    alignItems="stretch"
+                  >
+                    <div className={classes.avatarCard}>
+                      <Typography className={classes.monospace}>
+                        User ID:
+                      </Typography>
+                      <Typography>{tempDialogData.uid}</Typography>
+                    </div>
+                    <div className={classes.avatarCard}>
+                      <Typography className={classes.monospace}>
+                        User Nick Name:
+                      </Typography>
+                      <Typography>RandomNickname</Typography>
+                    </div>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        );
+      case 2:
         return (
           <TextField
             autoFocus
@@ -234,7 +304,7 @@ function Notes() {
                 <Button
                   disabled={activeStep === 0}
                   onClick={handleBack}
-                  className={classes.button}
+                  className={classes.stepperButton}
                 >
                   Back
                 </Button>
@@ -244,7 +314,7 @@ function Notes() {
                     variant="contained"
                     color="primary"
                     onClick={handleNext}
-                    className={classes.button}
+                    className={classes.stepperButton}
                   >
                     Next
                   </Button>
@@ -253,13 +323,13 @@ function Notes() {
                     variant="contained"
                     color="primary"
                     onClick={handleInformation}
-                    className={classes.button}
+                    className={classes.stepperButton}
                   >
                     Finish
                   </Button>
                 )}
 
-                <Button onClick={handleClose} className={classes.button}>
+                <Button onClick={handleClose} className={classes.stepperButton}>
                   Cancel
                 </Button>
               </div>
