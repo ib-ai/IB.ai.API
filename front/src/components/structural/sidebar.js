@@ -16,7 +16,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import Toolbar from "@material-ui/core/Toolbar";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import { Typography, Divider, Grid, Box } from "@material-ui/core";
+import { Typography, Divider, Grid, Box, Snackbar } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import {
@@ -95,7 +96,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Sidebar() {
+function SnackbarAlert(props) {
+  return <Alert elevation={6} variant="filled" {...props} />;
+}
+
+function Sidebar(props) {
   const sideBarCategories = [
     { id: "Tags", comp: Tags, default: false },
     { id: "Reactions", comp: Reactions, default: false },
@@ -127,6 +132,16 @@ function Sidebar() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [cardsInGrid, setCards] = React.useState([]);
 
+  const [snackbarOpen, setSnackBarOpen] = React.useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackBarOpen(false);
+  };
+
   const onSideBarClick = (sideBarKey) => {
     let newArray = { ...sideBarShown };
 
@@ -153,6 +168,9 @@ function Sidebar() {
 
   useEffect(() => {
     if (firstRun) {
+      if (props.loggedInStatus === "LOGGED_IN") {
+        setSnackBarOpen(true);
+      }
       Object.keys(sideBarShown).forEach((key) => {
         if (sideBarShown[key] === true) {
           setCards((c) => c.concat({ id: key }));
@@ -166,6 +184,11 @@ function Sidebar() {
 
   function handleDrawerToggle() {
     setMobileOpen(!mobileOpen);
+  }
+
+  function handleLogout(props) {
+    props.handleLogout();
+    props.history.push("/");
   }
 
   const drawer = (
@@ -203,6 +226,15 @@ function Sidebar() {
 
   return (
     <div className={classes.root}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleClose}
+      >
+        <SnackbarAlert onClose={handleClose} severity="success">
+          Logged in!
+        </SnackbarAlert>
+      </Snackbar>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
@@ -224,7 +256,13 @@ function Sidebar() {
               />
             </Grid>
             <Grid item>
-              <Button variant="outlined" color="inherit">
+              <Button
+                variant="outlined"
+                color="inherit"
+                onClick={() => {
+                  handleLogout(props);
+                }}
+              >
                 Logout
               </Button>
             </Grid>
