@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
+  DialogActions,
   Button,
   TextField,
   Typography,
@@ -84,8 +85,12 @@ const useStyles = makeStyles((theme) => ({
 
 function Notes() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [tempDialogData, setDialogData] = React.useState({ note: "", uid: "" });
+  const [open, setOpen] = React.useState({});
+  const [tempDialogData, setDialogData] = React.useState({
+    note: "",
+    uid: "",
+    idx: 0,
+  });
   const [notesTransition, setNotesTransition] = React.useState(false);
   const [cardData, setCardData] = React.useState({});
 
@@ -108,17 +113,17 @@ function Notes() {
 
   const [collapseOpen, setCollapseOpen] = React.useState({});
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = (dialogName) => {
+    setOpen({ ...open, [dialogName]: true });
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClose = (dialogName) => {
+    setOpen({ ...open, [dialogName]: false });
     setDialogData({ note: "", uid: "" });
     setActiveStep(0);
   };
 
-  const handleInformation = () => {
+  const handleInformation = (dialogName) => {
     setNotes((prevState) => {
       const data = [...prevState.data];
       data.push({
@@ -130,8 +135,7 @@ function Notes() {
       setDialogData({ note: "", uid: "" });
       return { ...prevState, data };
     });
-    setOpen(false);
-    setActiveStep(0);
+    handleClose(dialogName);
   };
 
   const getStepContent = (step) => {
@@ -239,13 +243,13 @@ function Notes() {
           {
             id: 1,
             text: "Note 1",
-            timestamp: "2020-06-11",
+            timestamp: "11-6-2020",
             staffuid: "1237192371298731",
           },
           {
             id: 2,
             text: "Note 2",
-            timestamp: "2020-06-11",
+            timestamp: "11-6-2020",
             staffuid: "1237192371298731",
           },
         ],
@@ -258,13 +262,13 @@ function Notes() {
           {
             id: 1,
             text: "Note 1",
-            timestamp: "2020-06-11",
+            timestamp: "12-5-2020",
             staffuid: "1237192371298731",
           },
           {
             id: 2,
             text: "Note 2",
-            timestamp: "2020-06-11",
+            timestamp: "12-6-2020",
             staffuid: "1237192371298731",
           },
         ],
@@ -276,8 +280,124 @@ function Notes() {
     <Grid item xs={12}>
       <div className={classes.root}>
         <Dialog
-          open={open}
-          onClose={handleClose}
+          open={open["newNote"]}
+          onClose={() => {
+            handleClose("newNote");
+          }}
+        >
+          <DialogTitle>Add a new note</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To add a new note to this user, simply type in the note below.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="note"
+              label="New Note"
+              type="text"
+              fullWidth
+              value={tempDialogData.note || ""}
+              onChange={(e) =>
+                setDialogData({ ...tempDialogData, note: e.target.value })
+              }
+            />
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  handleClose("newNote");
+                }}
+                color="primary"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  var noteIDs = [];
+                  cardData.notes.forEach((note) => {
+                    noteIDs.push(note.id);
+                  });
+                  const today = new Date();
+                  setCardData({
+                    ...cardData,
+                    notes: [
+                      ...cardData.notes,
+                      {
+                        id: parseInt(Math.max(...noteIDs)) + 1,
+                        text: tempDialogData.note,
+                        timestamp:
+                          today.getDate() +
+                          "-" +
+                          parseInt(today.getMonth() + 1) +
+                          "-" +
+                          today.getFullYear(),
+                        staffuid: "1237192371298731",
+                      },
+                    ],
+                  });
+                  handleClose("newNote");
+                }}
+                color="primary"
+                autoFocus
+              >
+                Add
+              </Button>
+            </DialogActions>
+          </DialogContent>
+        </Dialog>
+        <Dialog
+          open={open["confirmDelete"]}
+          onClose={() => {
+            handleClose("confirmDelete");
+          }}
+        >
+          <DialogTitle>Are you sure you want to delete this note?</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Deleting this note is a non-reversible action. It cannot be
+              recovered.
+            </DialogContentText>
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  handleClose("confirmDelete");
+                }}
+                color="primary"
+              >
+                Nah
+              </Button>
+              <Button
+                onClick={() => {
+                  const prevState = { ...cardData.notes };
+                  const myKeys = Object.keys(prevState);
+
+                  var newKeys = myKeys.filter(
+                    (item) => myKeys.indexOf(item) !== tempDialogData.idx
+                  );
+
+                  var matchingValues = newKeys.map((key) => {
+                    return prevState[key];
+                  });
+
+                  setCardData({
+                    ...cardData,
+                    notes: matchingValues,
+                  });
+                  handleClose("confirmDelete");
+                }}
+                color="primary"
+                autoFocus
+              >
+                Sure!
+              </Button>
+            </DialogActions>
+          </DialogContent>
+        </Dialog>
+        <Dialog
+          open={open["newUser"]}
+          onClose={() => {
+            handleClose("newUser");
+          }}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Add New User</DialogTitle>
@@ -322,14 +442,21 @@ function Notes() {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleInformation}
+                    onClick={() => {
+                      handleInformation("newUser");
+                    }}
                     className={classes.stepperButton}
                   >
                     Finish
                   </Button>
                 )}
 
-                <Button onClick={handleClose} className={classes.stepperButton}>
+                <Button
+                  onClick={() => {
+                    handleClose("newUser");
+                  }}
+                  className={classes.stepperButton}
+                >
                   Cancel
                 </Button>
               </div>
@@ -339,16 +466,35 @@ function Notes() {
         {notesTransition ? (
           <Card className={classes.cardDesign}>
             <CardContent>
-              <Grid container direction="row" alignItems="center">
-                <IconButton
-                  size="medium"
-                  onClick={() => {
-                    setNotesTransition(false);
-                  }}
-                >
-                  <ArrowBack fontSize="inherit" />
-                </IconButton>
-                <Typography variant="h5">{cardData.name}</Typography>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justify="space-between"
+              >
+                <Grid item>
+                  <Grid container direction="row" alignItems="center">
+                    <IconButton
+                      size="medium"
+                      onClick={() => {
+                        setNotesTransition(false);
+                      }}
+                    >
+                      <ArrowBack fontSize="inherit" />
+                    </IconButton>
+                    <Typography variant="h5">{cardData.name}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    size="medium"
+                    onClick={() => {
+                      handleClickOpen("newNote");
+                    }}
+                  >
+                    <Add fontSize="inherit" />
+                  </IconButton>
+                </Grid>
               </Grid>
               {cardData.notes.map((note, index) => (
                 <Table>
@@ -436,23 +582,11 @@ function Notes() {
                                 <TableCell>
                                   <IconButton
                                     onClick={() => {
-                                      const prevState = { ...cardData.notes };
-                                      const myKeys = Object.keys(prevState);
-
-                                      var newKeys = myKeys.filter(
-                                        (item) => myKeys.indexOf(item) !== index
-                                      );
-
-                                      var matchingValues = newKeys.map(
-                                        (key) => {
-                                          return prevState[key];
-                                        }
-                                      );
-
-                                      setCardData({
-                                        ...cardData,
-                                        notes: matchingValues,
+                                      setDialogData({
+                                        ...tempDialogData,
+                                        idx: index,
                                       });
+                                      handleClickOpen("confirmDelete");
                                     }}
                                   >
                                     <Delete />
@@ -512,7 +646,7 @@ function Notes() {
                   {
                     icon: Add,
                     onClick: () => {
-                      handleClickOpen();
+                      handleClickOpen("newUser");
                     },
                     isFreeAction: true,
                     tooltip: "Add New User",
