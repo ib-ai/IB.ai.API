@@ -85,20 +85,31 @@ function Monitor() {
     columns: [
       { title: "User Name", field: "name" },
       { title: "User ID", field: "uid" },
-      { title: "Quick Note", field: "note" },
+      {
+        title: "All Notes",
+        field: "",
+        render: (rowData) => (
+          <Button
+            variant="outlined"
+            onClick={() => {
+              alert("In Progress!");
+            }}
+          >
+            View
+          </Button>
+        ),
+      },
       { title: "Number Of Kicks", field: "kicks" },
     ],
     data: [
       {
         name: "Nope",
         uid: 123187410923847,
-        note: "for being so cute",
         kicks: 0,
       },
       {
         name: "Confuzz",
         uid: 123187410923847,
-        note: "for being so cute",
         kicks: 0,
       },
     ],
