@@ -1,6 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
+import NotesSubsection from "../subSections/NotesSubsection.js";
+
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
@@ -14,12 +16,6 @@ import {
   Button,
   TextField,
   Typography,
-  IconButton,
-  Collapse,
-  TableRow,
-  TableCell,
-  TableBody,
-  Table,
   Stepper,
   Step,
   StepLabel,
@@ -42,8 +38,6 @@ import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import ArrowBack from "@material-ui/icons/ArrowBack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,12 +87,6 @@ function Notes() {
   });
   const [notesTransition, setNotesTransition] = React.useState(false);
   const [cardData, setCardData] = React.useState({});
-
-  const [editInformation, setEditInformation] = React.useState({
-    id: 0,
-    edit: false,
-    note: "",
-  });
 
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = ["Enter User ID", "User Info", "Add Note"];
@@ -464,180 +452,11 @@ function Notes() {
           </DialogContent>
         </Dialog>
         {notesTransition ? (
-          <Card className={classes.cardDesign}>
-            <CardContent>
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                justify="space-between"
-              >
-                <Grid item>
-                  <Grid container direction="row" alignItems="center">
-                    <IconButton
-                      size="medium"
-                      onClick={() => {
-                        setNotesTransition(false);
-                      }}
-                    >
-                      <ArrowBack fontSize="inherit" />
-                    </IconButton>
-                    <Typography variant="h5">{cardData.name}</Typography>
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <IconButton
-                    size="medium"
-                    onClick={() => {
-                      handleClickOpen("newNote");
-                    }}
-                  >
-                    <Add fontSize="inherit" />
-                  </IconButton>
-                </Grid>
-              </Grid>
-              {cardData.notes.map((note, index) => (
-                <Table>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        <IconButton
-                          aria-label="expand row"
-                          size="small"
-                          onClick={() => {
-                            const userId = cardData.uid;
-                            const prevState = { ...collapseOpen[userId] };
-
-                            const data = {
-                              ...prevState,
-                              [note.id]: !prevState[note.id],
-                            };
-
-                            setCollapseOpen({
-                              ...collapseOpen,
-                              [userId]: data,
-                            });
-                          }}
-                        >
-                          {collapseOpen[cardData.uid][note.id] ? (
-                            <KeyboardArrowUpIcon />
-                          ) : (
-                            <KeyboardArrowDownIcon />
-                          )}
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>{note.timestamp}</TableCell>
-                      <TableCell>
-                        {"Last edited by: " + note.staffuid}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell
-                        style={{ paddingBottom: 0, paddingTop: 0 }}
-                        colSpan={6}
-                      >
-                        <Collapse
-                          in={collapseOpen[cardData.uid][note.id]}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          <Table size="small" aria-label="notes">
-                            <TableBody>
-                              {editInformation["edit"] &&
-                              editInformation["id"] === note.id ? (
-                                <TableCell>
-                                  <IconButton
-                                    onClick={() => {
-                                      setEditInformation({
-                                        id: 0,
-                                        edit: false,
-                                        note: "",
-                                      });
-                                    }}
-                                  >
-                                    <Cancel />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={() => {
-                                      const prevState = [...cardData.notes];
-                                      prevState[index]["text"] =
-                                        editInformation["note"];
-
-                                      setCardData({
-                                        ...cardData,
-                                        notes: prevState,
-                                      });
-
-                                      setEditInformation({
-                                        id: 0,
-                                        edit: false,
-                                        note: "",
-                                      });
-                                    }}
-                                  >
-                                    <Check />
-                                  </IconButton>
-                                </TableCell>
-                              ) : (
-                                <TableCell>
-                                  <IconButton
-                                    onClick={() => {
-                                      setDialogData({
-                                        ...tempDialogData,
-                                        idx: index,
-                                      });
-                                      handleClickOpen("confirmDelete");
-                                    }}
-                                  >
-                                    <Delete />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={() => {
-                                      setEditInformation({
-                                        id: note.id,
-                                        edit: true,
-                                        note: note.text,
-                                      });
-                                    }}
-                                  >
-                                    <Edit />
-                                  </IconButton>
-                                </TableCell>
-                              )}
-
-                              <TableCell width="70%">
-                                {editInformation["edit"] &&
-                                editInformation["id"] === note.id ? (
-                                  <TextField
-                                    value={editInformation["note"]}
-                                    fullWidth={true}
-                                    multiline={true}
-                                    InputProps={{
-                                      classes: {
-                                        input: classes.resize,
-                                      },
-                                    }}
-                                    onChange={(e) =>
-                                      setEditInformation({
-                                        ...editInformation,
-                                        note: e.target.value,
-                                      })
-                                    }
-                                  />
-                                ) : (
-                                  <Typography>{note.text}</Typography>
-                                )}
-                              </TableCell>
-                            </TableBody>
-                          </Table>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              ))}
-            </CardContent>
-          </Card>
+          <NotesSubsection
+            noteData={cardData}
+            setNotesTransition={setNotesTransition}
+            collapseOpen={collapseOpen}
+          />
         ) : (
           <Card className={classes.cardDesign}>
             <CardContent>
