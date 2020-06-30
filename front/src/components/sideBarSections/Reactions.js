@@ -33,6 +33,8 @@ import Edit from "@material-ui/icons/Edit";
 import Delete from "@material-ui/icons/Delete";
 import Clear from "@material-ui/icons/Clear";
 import Cancel from "@material-ui/icons/Cancel";
+import Launch from "@material-ui/icons/Launch";
+import ArrowBack from "@material-ui/icons/ArrowBack";
 
 const useRowStyles = makeStyles({
   root: {
@@ -58,9 +60,106 @@ const useStyles = makeStyles({
     marginLeft: "20px",
     width: "100%",
   },
+  innerButton: {
+    display: "block",
+  },
 });
 
-function ReactionTable(reactionData) {
+function CardComponent(props) {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [transition, setTransition] = React.useState({
+    table: false,
+    data: {},
+  });
+  // const classes = useRowStyles();
+
+  return transition.table ? (
+    <ReactionTable
+      reactionData={transition.data}
+      setTransition={setTransition}
+    />
+  ) : (
+    <TableContainer component={Paper}>
+      <Table aria-label="collapsible table">
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>Channel Name</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {reactionRoles.map((reactionRole) => (
+            // <Row key={reactionRole.name} reactions={reactionRole} />
+            <>
+              <TableRow className={classes.root} key={reactionRole.name}>
+                <TableCell>
+                  <IconButton
+                    aria-label="expand row"
+                    size="small"
+                    onClick={() => setOpen(!open)}
+                  >
+                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                  </IconButton>
+                </TableCell>
+                <TableCell component="th" scope="reaction">
+                  {reactionRole.name}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell
+                  style={{ paddingBottom: 0, paddingTop: 0 }}
+                  colSpan={6}
+                >
+                  <Collapse in={open} timeout="auto" unmountOnExit>
+                    <Box margin={1}>
+                      <Typography variant="h6" gutterBottom component="div">
+                        Messages
+                      </Typography>
+                      {reactionRole.messages.map((reactionRow, index) => {
+                        return (
+                          <Table>
+                            <TableBody>
+                              <TableRow className={classes.root}>
+                                <TableCell>
+                                  <IconButton
+                                    aria-label="expand row"
+                                    size="small"
+                                    onClick={() => {
+                                      console.log(reactionRow.reactions);
+                                      setTransition({
+                                        table: true,
+                                        data: reactionRow.reactions,
+                                      });
+                                    }}
+                                  >
+                                    <Launch />
+                                  </IconButton>
+                                </TableCell>
+                                <TableCell component="th" scope="reaction">
+                                  {reactionRow.name}
+                                </TableCell>
+                                <TableCell>
+                                  {reactionRow.reactions.length}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        );
+                      })}
+                    </Box>
+                  </Collapse>
+                </TableCell>
+              </TableRow>
+            </>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+function ReactionTable(props) {
   const classes = useStyles();
 
   const [reactionTable, setReactionTable] = React.useState({
@@ -69,7 +168,7 @@ function ReactionTable(reactionData) {
       { title: "Name", field: "name" },
       { title: "Emote", field: "emote" },
     ],
-    data: reactionData,
+    data: props.reactionData,
   });
 
   return (
@@ -97,6 +196,15 @@ function ReactionTable(reactionData) {
         title="Reaction List"
         columns={reactionTable.columns}
         data={reactionTable.data}
+        actions={[
+          {
+            icon: ArrowBack,
+            isFreeAction: true,
+            onClick: () => {
+              props.setTransition({ table: false, data: {} });
+            },
+          },
+        ]}
         editable={{
           onRowAdd: (newData) =>
             new Promise((resolve) => {
@@ -258,26 +366,13 @@ const reactionRoles = [
 
 function Reactions() {
   const classes = useStyles();
+
   return (
     <Grid item xs={12}>
       <div className={classes.root}>
         <Card className={classes.cardDesign}>
           <CardContent>
-            <TableContainer component={Paper}>
-              <Table aria-label="collapsible table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell />
-                    <TableCell>Channel Name</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {reactionRoles.map((reactionRole) => (
-                    <Row key={reactionRole.name} reactions={reactionRole} />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <CardComponent />
           </CardContent>
         </Card>
       </div>
