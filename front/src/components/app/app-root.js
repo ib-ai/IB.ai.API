@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
+import Paper from "@material-ui/core/Paper";
 import Alert from "@material-ui/lab/Alert";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "../structural/Home.js";
@@ -20,11 +22,13 @@ export default class AppRoot extends Component {
       snackBarOpen: false,
       text: "",
       severity: "",
+      darkMode: false,
     };
 
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
+    this.toggleDarkMode = this.toggleDarkMode.bind(this);
   }
 
   handleLogout(props) {
@@ -52,7 +56,20 @@ export default class AppRoot extends Component {
     });
   }
 
+  toggleDarkMode() {
+    this.setState({
+      ...this.state,
+      darkMode: !this.state.darkMode,
+    });
+  }
+
   render() {
+    const theme = createMuiTheme({
+      palette: {
+        type: this.state.darkMode ? "dark" : "light",
+      },
+    });
+
     return (
       <div>
         <Snackbar
@@ -73,18 +90,25 @@ export default class AppRoot extends Component {
               exact
               path={"/"}
               render={(props) => (
-                <Home {...props} handleLogin={this.handleLogin} />
+                <ThemeProvider theme={theme}>
+                  <Paper height>
+                    <Home {...props} handleLogin={this.handleLogin} />
+                  </Paper>
+                </ThemeProvider>
               )}
             />
             <Route
               exact
               path={"/dashboard"}
               render={(props) => (
-                <Sidebar
-                  {...props}
-                  handleLogout={this.handleLogout}
-                  loggedInStatus={this.state.loggedInStatus}
-                />
+                <ThemeProvider theme={theme}>
+                  <Sidebar
+                    {...props}
+                    handleLogout={this.handleLogout}
+                    loggedInStatus={this.state.loggedInStatus}
+                    toggleDarkMode={this.toggleDarkMode}
+                  />
+                </ThemeProvider>
               )}
             />
           </Switch>

@@ -16,8 +16,17 @@ import CloseIcon from "@material-ui/icons/Close";
 import Toolbar from "@material-ui/core/Toolbar";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import { Typography, Divider, Grid, Box } from "@material-ui/core";
+import {
+  Typography,
+  Divider,
+  Grid,
+  Box,
+  Grow,
+  Tooltip,
+} from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+
+import { Brightness6 } from "@material-ui/icons";
 
 import {
   Cassowaries,
@@ -229,6 +238,12 @@ function Sidebar(props) {
               />
             </Grid>
             <Grid item>
+              <Tooltip title="Change theme" arrow>
+                <IconButton onClick={props.toggleDarkMode}>
+                  <Brightness6 />
+                </IconButton>
+              </Tooltip>
+
               <Button
                 variant="outlined"
                 color="inherit"
@@ -319,9 +334,11 @@ function Sidebar(props) {
                       (cat) => cat.id === card.id
                     ).comp;
                     return (
-                      <Box width={1} padding={2.5}>
-                        <Component key={card.id} />
-                      </Box>
+                      <Grow direction="up" in={true}>
+                        <Box width={1} padding={2.5}>
+                          <Component key={card.id} />
+                        </Box>
+                      </Grow>
                     );
                   })}
               </Grid>
@@ -344,9 +361,11 @@ function Sidebar(props) {
                       (cat) => cat.id === card.id
                     ).comp;
                     return (
-                      <Box width={1} padding={2.5}>
-                        <Component key={card.id} />
-                      </Box>
+                      <Grow direction="up" in={true}>
+                        <Box width={1} padding={2.5}>
+                          <Component key={card.id} />
+                        </Box>
+                      </Grow>
                     );
                   })}
               </Grid>
